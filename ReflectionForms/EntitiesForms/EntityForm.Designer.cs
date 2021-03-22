@@ -38,9 +38,13 @@ namespace ReflectionForms
 			// 
 			// dataGridView
 			// 
+			this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridView.Location = new System.Drawing.Point(12, 12);
+			this.dataGridView.MultiSelect = false;
 			this.dataGridView.Name = "dataGridView";
+			this.dataGridView.ReadOnly = true;
+			this.dataGridView.RowHeadersVisible = false;
 			this.dataGridView.Size = new System.Drawing.Size(707, 594);
 			this.dataGridView.TabIndex = 0;
 			// 

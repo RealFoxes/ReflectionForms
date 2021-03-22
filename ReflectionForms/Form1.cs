@@ -15,25 +15,10 @@ namespace ReflectionForms
 {
 	public partial class Form1 : Form
 	{
+		public static List<SomeEntity> someEntities = new List<SomeEntity>();
+		public static List<Class> classes = new List<Class>(); // Заглушка пока нету базы
 		public Form1()
 		{
-			MySqlConnectionStringBuilder stringBuilder = new MySqlConnectionStringBuilder();
-			stringBuilder.Server = "localhost";
-			stringBuilder.Port = 3306;
-			stringBuilder.Database = "RefrectionForms";
-			stringBuilder.UserID = "root";
-			stringBuilder.Password = "";
-			Console.WriteLine(stringBuilder.ToString());
-			Model model = new Model();
-			EntityForm<SomeEntity> entityForm = new EntityForm<SomeEntity>(GetSomeEntities);
-			entityForm.Show();
-			InitializeComponent();
-		}
-
-
-		public List<SomeEntity> GetSomeEntities()
-		{
-			List<SomeEntity> someEntities = new List<SomeEntity>();
 			for (int i = 0; i < 5; i++)
 			{
 				SomeEntity someEntity = new SomeEntity();
@@ -46,12 +31,15 @@ namespace ReflectionForms
 
 				Class clas = new Class();
 				clas.Id = i;
-				clas.MyProperty = 2*i;
+				clas.MyProperty = 2 * i;
+				classes.Add(clas);
 				someEntity.SomeRef = clas;
 
 				someEntities.Add(someEntity);
 			}
-			return someEntities;
+			EntityForm<SomeEntity> entityForm = new EntityForm<SomeEntity>();
+			entityForm.Show();
+			InitializeComponent();
 		}
 	}
 }

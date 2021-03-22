@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ReflectionForms.Entities
 {
-	public class Class
+	public class Class : ReflEntity<Class>
 	{
 		[Key, ReflFormName("ЫД")]
 		public int Id { get; set; }
@@ -17,6 +17,10 @@ namespace ReflectionForms.Entities
 		public Class()
 		{
 			SomeEntities = new List<SomeEntity>();
+		}
+		public new static List<Class> GetEntities()
+		{
+			return Form1.classes;
 		}
 	}
 }

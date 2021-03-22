@@ -24,7 +24,7 @@ namespace ReflectionForms.EntitiesForms
 	}
 	public class ReflFormRef : ReflFormAtt
 	{
-		public string PropertyToShow { get; set; } // 
+		public string PropertyToShow { get; set; }
 		public ReflFormRef(string PropertyToShow)
 		{
 

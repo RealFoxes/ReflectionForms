@@ -8,21 +8,27 @@ using System.Threading.Tasks;
 
 namespace ReflectionForms.Entities
 {
-	public class SomeEntity
+	public class SomeEntity : ReflEntity<SomeEntity>
 	{
 		[Key,ReflFormName("НекотороеСвойство")] //Колонка в таблице / Лейбл над тексто боксом или другим контролом
 		public int SomeId { get; set; }
 		public int SomeProp { get; set; }
 		[ReflFormRef("Id")]
 		public Class SomeRef { get; set; }
+		[ReflFormNotVisible]
 		public SomeEnum someEnum { get; set; }
 		public DateTime SomeDate { get; set; }
 		public string SomeString { get; set; }
 		public char c { get; set; }
 		public SomeEntity()
 		{
+		
+		}
 
-		} 
+		public new static List<SomeEntity> GetEntities()
+		{
+			return Form1.someEntities;
+		}
 	}
 	public enum SomeEnum
 	{

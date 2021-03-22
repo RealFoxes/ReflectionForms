@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ReflectionForms.EntitiesForms;
+using ReflectionForms.EntitiesForms.FieldsForEdit;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -12,17 +13,57 @@ using System.Windows.Forms;
 
 namespace ReflectionForms
 {
-	public delegate List<T> GetEntities<T>() where T : class;
+
+	
 	public partial class EntityForm<T> : Form where T : class
 	{
-		private GetEntities<T> getEntities { get; set; }
+		public Type[] TextBoxFieldTypes = { typeof(string), typeof(Int16), typeof(Int32), typeof(Int64),typeof(byte),typeof(char) };
 	
-		public EntityForm(GetEntities<T> getEntities)
+		public EntityForm()
 		{
-			this.getEntities = new GetEntities<T>(getEntities);
 			InitializeComponent();
 			UpdateTable();
-			//Add controls with labels...
+			AddFields();
+			
+		}
+		private void AddFields()
+		{
+
+			foreach (PropertyInfo property in typeof(T).GetProperties())
+			{
+				var propType = property.PropertyType;
+				if (property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormNotVisible") == null)
+				{
+					if (TextBoxFieldTypes.Contains(propType))
+					{
+						var uc = new StringAndIntNumbers(property);
+						uc.Dock = DockStyle.Top;
+						uc.BringToFront();
+						panel.Controls.Add(uc);
+					}
+					else if (propType == typeof(DateTime))
+					{
+						var uc = new DateTimeField(property);
+						uc.Dock = DockStyle.Top;
+						uc.BringToFront();
+						panel.Controls.Add(uc);
+					}
+					else if (propType.GetTypeInfo().IsClass)
+					{
+						var uc = new ReferenceField(property);
+						uc.Dock = DockStyle.Top;
+						uc.BringToFront();
+						panel.Controls.Add(uc);
+					}
+					else if (propType.GetTypeInfo().IsEnum)
+					{
+						var uc = new EnumField(property);
+						uc.Dock = DockStyle.Top;
+						uc.BringToFront();
+						panel.Controls.Add(uc);
+					}
+				}
+			}
 		}
 		private void UpdateTable()
 		{
@@ -58,7 +99,7 @@ namespace ReflectionForms
 			}
 
 			//body
-			List<T> entities = getEntities();
+			List<T> entities = (List<T>)typeof(T).GetMethod("GetEntities").Invoke(null,null);
 			for (int i = 0; i < entities.Count; i++)
 			{
 				T entity = entities[i];
@@ -66,8 +107,8 @@ namespace ReflectionForms
 				DataRow row = dt.NewRow();
 				foreach (PropertyInfo property in typeof(T).GetProperties())
 				{
-					var columnId = dt.Columns.Cast<DataColumn>().FirstOrDefault(c => c.ColumnName == GetColumnName(property)).Ordinal;
-					row[columnId] = GetValue(property, entity);
+					var columnId = dt.Columns.Cast<DataColumn>().FirstOrDefault(c => c.ColumnName == Utilities.GetColumnName(property)).Ordinal;
+					row[columnId] = Utilities.GetValue(property, entity);
 				}
 				dt.Rows.Add(row);
 			}
@@ -75,37 +116,6 @@ namespace ReflectionForms
 
 		}
 
-		private string GetColumnName(PropertyInfo property)
-		{
-			string columnName;
-			var att = property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormRef");
-			if(att != null)
-			{
-				var propFromRef = property.PropertyType.GetProperties().FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString());
-				columnName = propFromRef.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName")?.ConstructorArguments[0].Value.ToString()
-								 ?? propFromRef.Name;
-			}
-			else
-			{
-				columnName = property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName")?.ConstructorArguments[0].Value.ToString() ?? property.Name;
-			}
-			
-			return columnName;
-		}
-		private object GetValue<Entity>(PropertyInfo property, Entity entity)
-		{
-			object value;
-			var att = property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormRef");
-			if(att != null)
-			{
-				var propFromRef = property.PropertyType.GetProperties().FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString());
-				value = propFromRef.GetValue(property.GetValue(entity));
-			}
-			else
-			{
-				value = property.GetValue(entity);
-			}
-			return value;
-		}
+		
 	}
 }
