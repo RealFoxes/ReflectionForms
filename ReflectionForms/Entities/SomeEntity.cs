@@ -10,10 +10,10 @@ namespace ReflectionForms.Entities
 {
 	public class SomeEntity : ReflEntity<SomeEntity>
 	{
-		[Key,ReflFormName("НекотороеСвойство")] //Колонка в таблице / Лейбл над тексто боксом или другим контролом
+		[Key,ReflFormName("12111")] //Колонка в таблице / Лейбл над тексто боксом или другим контролом
 		public int SomeId { get; set; }
 		public int SomeProp { get; set; }
-		[ReflFormRef("Id")]
+		[ReflFormRef("MyProperty")]
 		public Class SomeRef { get; set; }
 		[ReflFormNotVisible]
 		public SomeEnum someEnum { get; set; }
@@ -28,6 +28,10 @@ namespace ReflectionForms.Entities
 		public new static List<SomeEntity> GetEntities()
 		{
 			return Form1.someEntities;
+		}
+		public new static void DeleteEntity(SomeEntity someEntity)
+		{
+			Form1.someEntities.Remove(someEntity);
 		}
 	}
 	public enum SomeEnum

@@ -16,6 +16,7 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 		public EnumField(PropertyInfo property)
 		{
 			InitializeComponent();
+			this.Tag = property.DeclaringType.FullName + "." + property.Name;
 			label.Text = Utilities.GetColumnName(property);
 			FieldInfo[] field_infos = property.PropertyType.GetFields();
 			for (int i = 1; i < field_infos.Length; i++)

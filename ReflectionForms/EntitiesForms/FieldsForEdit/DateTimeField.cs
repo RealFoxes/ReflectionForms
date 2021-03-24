@@ -16,6 +16,7 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 		public DateTimeField(PropertyInfo property)
 		{
 			InitializeComponent();
+			this.Tag = property.DeclaringType.FullName+"."+property.Name;
 			label.Text = Utilities.GetColumnName(property);
 		}
 	}

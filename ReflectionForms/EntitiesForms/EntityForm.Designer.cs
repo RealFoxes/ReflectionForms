@@ -45,8 +45,10 @@ namespace ReflectionForms
 			this.dataGridView.Name = "dataGridView";
 			this.dataGridView.ReadOnly = true;
 			this.dataGridView.RowHeadersVisible = false;
+			this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGridView.Size = new System.Drawing.Size(707, 594);
 			this.dataGridView.TabIndex = 0;
+			this.dataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellDoubleClick);
 			// 
 			// buttonDelete
 			// 
@@ -56,15 +58,17 @@ namespace ReflectionForms
 			this.buttonDelete.TabIndex = 1;
 			this.buttonDelete.Text = "Удалить";
 			this.buttonDelete.UseVisualStyleBackColor = true;
+			this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
 			// 
 			// buttonChange
 			// 
-			this.buttonChange.Location = new System.Drawing.Point(865, 560);
+			this.buttonChange.Location = new System.Drawing.Point(919, 560);
 			this.buttonChange.Name = "buttonChange";
 			this.buttonChange.Size = new System.Drawing.Size(75, 23);
 			this.buttonChange.TabIndex = 2;
 			this.buttonChange.Text = "Изменить";
 			this.buttonChange.UseVisualStyleBackColor = true;
+			this.buttonChange.Click += new System.EventHandler(this.buttonChange_Click);
 			// 
 			// panel
 			// 

@@ -17,6 +17,8 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 		public ReferenceField(PropertyInfo property)
 		{
 			InitializeComponent();
+			//Нужно реализовать добавление массива в комбобокс с сущностью и его отображаемым значением...
+			this.Tag = property.DeclaringType.FullName + "." + property.Name;
 			label.Text = Utilities.GetColumnName(property);
 			var att = property.CustomAttributes?.FirstOrDefault(a => a.AttributeType.Name == "ReflFormRef");
 			var List = ((IEnumerable)property.PropertyType.GetMethod("GetEntities").Invoke(null, null)).Cast<object>().ToList();

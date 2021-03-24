@@ -18,18 +18,29 @@ namespace ReflectionForms
 	public partial class EntityForm<T> : Form where T : class
 	{
 		public Type[] TextBoxFieldTypes = { typeof(string), typeof(Int16), typeof(Int32), typeof(Int64),typeof(byte),typeof(char) };
-	
+		private MethodInfo DeleteMethod, EditMethod;
+		private DataTable dt;
 		public EntityForm()
 		{
 			InitializeComponent();
 			UpdateTable();
 			AddFields();
+			EditMethod = typeof(T).GetMethod("EditEntity");
+			if (EditMethod == null)
+			{
+				buttonChange.Visible = false;
+			}
+			DeleteMethod = typeof(T).GetMethod("DeleteEntity");
+			if(DeleteMethod == null)
+			{
+				buttonDelete.Visible = false;
+			}
 			
 		}
 		private void AddFields()
 		{
 
-			foreach (PropertyInfo property in typeof(T).GetProperties())
+			foreach (PropertyInfo property in typeof(T).GetProperties().Reverse())
 			{
 				var propType = property.PropertyType;
 				if (property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormNotVisible") == null)
@@ -48,7 +59,7 @@ namespace ReflectionForms
 						uc.BringToFront();
 						panel.Controls.Add(uc);
 					}
-					else if (propType.GetTypeInfo().IsClass)
+					else if (property.CustomAttributes.FirstOrDefault(a =>a.AttributeType.Name == "ReflFormRef") != null)
 					{
 						var uc = new ReferenceField(property);
 						uc.Dock = DockStyle.Top;
@@ -67,12 +78,19 @@ namespace ReflectionForms
 		}
 		private void UpdateTable()
 		{
-			DataTable dt = new DataTable();
-			//header 
+			dt = new DataTable();
+			//Creting header 
+
+			bool[] IndexesToHide = new bool[typeof(T).GetProperties().Length+1]; // Recording column which need to hide
+			int iToHide = 0;
+
+			dt.Columns.Add(new DataColumn("Entity", typeof(T)));
+			IndexesToHide[iToHide++] = true; // Hide first column with instance entity
+
 			foreach (PropertyInfo property in typeof(T).GetProperties())
 			{
+				iToHide++;
 				bool ReflFormNameWasFound = false;
-				bool ToHide = false;
 				foreach (CustomAttributeData att in property.CustomAttributes)
 				{
 					switch (att.AttributeType.Name)
@@ -89,22 +107,21 @@ namespace ReflectionForms
 							ReflFormNameWasFound = true;
 							break;
 						case "ReflFormNotVisible":
-							var test = dt.Columns[dt.Columns.Count - 1];
-							ToHide = true;
+							IndexesToHide[iToHide] = true;
 							break;
 					}
 				}
 				if(!ReflFormNameWasFound) dt.Columns.Add(new DataColumn(property.Name, property.PropertyType));
-				if(ToHide) dt.Columns[dt.Columns.Count - 1].ColumnMapping = MappingType.Hidden;
 			}
 
-			//body
+			//Filling body
 			List<T> entities = (List<T>)typeof(T).GetMethod("GetEntities").Invoke(null,null);
 			for (int i = 0; i < entities.Count; i++)
 			{
 				T entity = entities[i];
 
 				DataRow row = dt.NewRow();
+				row[0] = entity;
 				foreach (PropertyInfo property in typeof(T).GetProperties())
 				{
 					var columnId = dt.Columns.Cast<DataColumn>().FirstOrDefault(c => c.ColumnName == Utilities.GetColumnName(property)).Ordinal;
@@ -114,8 +131,37 @@ namespace ReflectionForms
 			}
 			dataGridView.DataSource = dt;
 
+			//Hide column with att and entity
+			iToHide = 0;
+			foreach (DataGridViewColumn Column in dataGridView.Columns)
+			{
+				Column.Visible = !IndexesToHide[iToHide];
+				iToHide++;
+			}
+
 		}
 
-		
+		private void buttonChange_Click(object sender, EventArgs e)
+		{
+			//Добавить форму измения сущности
+		}
+
+
+		private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+		{
+			//e.RowIndex.ToString();
+				//Реализовать добавление в строки инфы
+			//foreach (Control item in panel.Controls)
+			//{
+			//	Console.WriteLine(item.Tag);
+			//}
+		}
+
+		private void buttonDelete_Click(object sender, EventArgs e)
+		{
+			object entity = dataGridView.SelectedRows[0].Cells[0].Value;
+			DeleteMethod.Invoke(null, new object[] { entity }); //Call delete method from entity class 
+			UpdateTable();
+		}
 	}
 }

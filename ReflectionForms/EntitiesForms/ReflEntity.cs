@@ -10,7 +10,15 @@ namespace ReflectionForms.EntitiesForms
 	{
 		protected static List<T> GetEntities()
 		{
-			return null;
+			throw new NotImplementedException();
+		}
+		protected static void EditEntity(T item)
+		{
+			throw new NotImplementedException();
+		}
+		protected static void DeleteEntity(T item)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
