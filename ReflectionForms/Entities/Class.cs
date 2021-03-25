@@ -18,9 +18,12 @@ namespace ReflectionForms.Entities
 		{
 			SomeEntities = new List<SomeEntity>();
 		}
-		public new static List<Class> GetEntities()
+		public new static IEnumerable<Class> GetEntities()
 		{
-			return Form1.classes;
+			using (var model = new ModelDatabase())
+			{
+				return model.Classes.ToList();
+			}
 		}
 	}
 }

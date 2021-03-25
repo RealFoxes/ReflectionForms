@@ -15,31 +15,19 @@ namespace ReflectionForms
 {
 	public partial class Form1 : Form
 	{
-		public static List<SomeEntity> someEntities = new List<SomeEntity>();
-		public static List<Class> classes = new List<Class>(); // Заглушка пока нету базы
 		public Form1()
 		{
-			for (int i = 0; i < 5; i++)
-			{
-				SomeEntity someEntity = new SomeEntity();
-				someEntity.SomeId = i;
-				someEntity.SomeProp = i * i;
-				someEntity.SomeString = i.ToString() + "SomeString";
-				someEntity.SomeDate = DateTime.Now;
-				someEntity.someEnum = SomeEnum.SomeEnum1;
-				someEntity.c = 'a';
-
-				Class clas = new Class();
-				clas.Id = i;
-				clas.MyProperty = 2 * i;
-				classes.Add(clas);
-				someEntity.SomeRef = clas;
-
-				someEntities.Add(someEntity);
-			}
 			EntityForm<SomeEntity> entityForm = new EntityForm<SomeEntity>();
 			entityForm.Show();
 			InitializeComponent();
+			
+			using (var model = new ModelDatabase())
+			{
+				
+				var a = model.SomeEntities.Include(s => s.SomeRef.SomeEntities).ToList();
+				//model.SomeEntities.Include(s => s.SomeRef.SomeEntities).First()
+			}
+			//Принимать в базу IEnumerable коллекцию, отказатся от методов получения листов внутри сущностей
 		}
 	}
 }

@@ -20,9 +20,12 @@ namespace ReflectionForms
 		public Type[] TextBoxFieldTypes = { typeof(string), typeof(Int16), typeof(Int32), typeof(Int64),typeof(byte),typeof(char) };
 		private MethodInfo DeleteMethod, EditMethod;
 		private DataTable dt;
-		public EntityForm()
+		public EntityForm() // Добавить реализацию прав скорее всего с помощью енамов / Добавить формы / Еще раз подумать над реализацией получаение всех инстансов из базы
 		{
 			InitializeComponent();
+
+			if (typeof(T).GetMethod("GetEntities") == null) throw new MethodGetEntitiesIsNotImplementedException();
+
 			UpdateTable();
 			AddFields();
 			EditMethod = typeof(T).GetMethod("EditEntity");
@@ -73,6 +76,7 @@ namespace ReflectionForms
 						uc.BringToFront();
 						panel.Controls.Add(uc);
 					}
+
 				}
 			}
 		}
@@ -93,7 +97,8 @@ namespace ReflectionForms
 				bool ReflFormNameWasFound = false;
 				foreach (CustomAttributeData att in property.CustomAttributes)
 				{
-					switch (att.AttributeType.Name)
+					var attType = att.AttributeType;
+					switch (att.AttributeType.Name) // Возможно посмотреть другие реализации менее костыльные с указанием конкретного атрибута, а не его наим.
 					{
 						case "ReflFormName":
 							dt.Columns.Add(new DataColumn(att.ConstructorArguments[0].Value.ToString(), property.PropertyType));
@@ -116,6 +121,7 @@ namespace ReflectionForms
 
 			//Filling body
 			List<T> entities = (List<T>)typeof(T).GetMethod("GetEntities").Invoke(null,null);
+
 			for (int i = 0; i < entities.Count; i++)
 			{
 				T entity = entities[i];

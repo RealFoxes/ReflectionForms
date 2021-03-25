@@ -12,16 +12,21 @@ namespace ReflectionForms.EntitiesForms
 		public static string GetColumnName(PropertyInfo property)
 		{
 			string columnName;
-			var att = property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormRef");
+			var att = property.CustomAttributes.FirstOrDefault(a => a.AttributeType == typeof(ReflFormRef)); // Try to find reference attribute
 			if (att != null)
 			{
 				var propFromRef = property.PropertyType.GetProperties().FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString());
-				columnName = propFromRef.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName")?.ConstructorArguments[0].Value.ToString()
+				//Getting property in reference
+
+				columnName = propFromRef.CustomAttributes.FirstOrDefault(a => a.AttributeType == typeof(ReflFormName))?.ConstructorArguments[0].Value.ToString()
 								 ?? propFromRef.Name;
+				//If attribute ReflFormName does not exist use name from assembly
 			}
 			else
 			{
-				columnName = property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName")?.ConstructorArguments[0].Value.ToString() ?? property.Name;
+				columnName = property.CustomAttributes.FirstOrDefault(a => a.AttributeType == typeof(ReflFormName))?.ConstructorArguments[0].Value.ToString()
+					?? property.Name;
+				//If attribute ReflFormName does not exist use name from assembly
 			}
 
 			return columnName;
@@ -29,10 +34,14 @@ namespace ReflectionForms.EntitiesForms
 		public static object GetValue<Entity>(PropertyInfo property, Entity entity)
 		{
 			object value;
-			var att = property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormRef");
+			var att = property.CustomAttributes
+				.FirstOrDefault(a => a.AttributeType == typeof(ReflFormRef)); // Try to find reference attribute
+
 			if (att != null)
 			{
-				var propFromRef = property.PropertyType.GetProperties().FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString());
+				var propFromRef = property.PropertyType.GetProperties()
+					.FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString());
+
 				value = propFromRef.GetValue(property.GetValue(entity));
 			}
 			else

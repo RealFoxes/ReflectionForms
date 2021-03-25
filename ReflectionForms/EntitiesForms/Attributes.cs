@@ -14,7 +14,7 @@ namespace ReflectionForms.EntitiesForms
 	{
 		public string Name { get; set; }
 
-		public ReflFormName(string Name)
+		public ReflFormName(string Name) // Возмонжо передавать dictionary с ключем локализации и значением для этого языка 
 		{
 			this.Name = Name;		
 		}

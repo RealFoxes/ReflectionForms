@@ -1,6 +1,7 @@
 ﻿using ReflectionForms.EntitiesForms;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace ReflectionForms.Entities
 {
 	public class SomeEntity : ReflEntity<SomeEntity>
 	{
-		[Key,ReflFormName("12111")] //Колонка в таблице / Лейбл над тексто боксом или другим контролом
+		[Key,ReflFormName("Тест")] //Колонка в таблице / Лейбл над тексто боксом или другим контролом
 		public int SomeId { get; set; }
 		public int SomeProp { get; set; }
 		[ReflFormRef("MyProperty")]
@@ -19,7 +20,6 @@ namespace ReflectionForms.Entities
 		public SomeEnum someEnum { get; set; }
 		public DateTime SomeDate { get; set; }
 		public string SomeString { get; set; }
-		public char c { get; set; }
 		public SomeEntity()
 		{
 		
@@ -27,11 +27,20 @@ namespace ReflectionForms.Entities
 
 		public new static List<SomeEntity> GetEntities()
 		{
-			return Form1.someEntities;
+			using (var model = new ModelDatabase())
+			{
+				return model.SomeEntities.Include(s => s.SomeRef.SomeEntities).ToList();
+			}
+
 		}
 		public new static void DeleteEntity(SomeEntity someEntity)
 		{
-			Form1.someEntities.Remove(someEntity);
+			using (var model = new ModelDatabase())
+			{
+				var toRemove = model.SomeEntities.FirstOrDefault(s => s.SomeId == someEntity.SomeId);
+				model.SomeEntities.Remove(toRemove);
+				model.SaveChanges();
+			}
 		}
 	}
 	public enum SomeEnum

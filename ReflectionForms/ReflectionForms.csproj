@@ -72,14 +72,11 @@
     <Reference Include="K4os.Hash.xxHash, Version=1.0.6.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
       <HintPath>..\packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=8.0.23.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.8.0.23\lib\net452\MySql.Data.dll</HintPath>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\v4.5.2\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data.Entity.EF6, Version=6.10.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.Entity.6.10.9\lib\net452\MySql.Data.Entity.EF6.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data.EntityFramework, Version=8.0.21.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.EntityFramework.8.0.21\lib\net452\MySql.Data.EntityFramework.dll</HintPath>
+    <Reference Include="MySql.Data.EntityFramework">
+      <HintPath>..\..\..\v4.5.2\MySql.Data.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Renci.SshNet, Version=2020.0.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\packages\SSH.NET.2020.0.0\lib\net40\Renci.SshNet.dll</HintPath>
@@ -125,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntitiesForms\Attributes.cs" />
+    <Compile Include="EntitiesForms\Exceptions.cs" />
     <Compile Include="EntitiesForms\FieldsForEdit\DateTimeField.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -165,12 +163,12 @@
     <Compile Include="EntitiesForms\EntityForm.Designer.cs">
       <DependentUpon>EntityForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202103182340309_V1.cs" />
-    <Compile Include="Migrations\202103182340309_V1.designer.cs">
-      <DependentUpon>202103182340309_V1.cs</DependentUpon>
+    <Compile Include="Migrations\202103251542592_v1.cs" />
+    <Compile Include="Migrations\202103251542592_v1.designer.cs">
+      <DependentUpon>202103251542592_v1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Model.cs" />
+    <Compile Include="ModelDatabase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="EntitiesForms\EntityForm.resx">
@@ -179,8 +177,8 @@
     <EmbeddedResource Include="EntitiesForms\FieldsForEdit\StringAndIntNumbers.resx">
       <DependentUpon>StringAndIntNumbers.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103182340309_V1.resx">
-      <DependentUpon>202103182340309_V1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202103251542592_v1.resx">
+      <DependentUpon>202103251542592_v1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -215,6 +213,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

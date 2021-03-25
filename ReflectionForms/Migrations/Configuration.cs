@@ -5,14 +5,14 @@
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<ReflectionForms.Model>
+    internal sealed class Configuration : DbMigrationsConfiguration<ReflectionForms.ModelDatabase>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(ReflectionForms.Model context)
+        protected override void Seed(ReflectionForms.ModelDatabase context)
         {
             //  This method will be called after migrating to the latest version.
 
