@@ -17,17 +17,23 @@ namespace ReflectionForms
 	{
 		public Form1()
 		{
-			EntityForm<SomeEntity> entityForm = new EntityForm<SomeEntity>();
+			EntityForm<SomeEntity> entityForm = new EntityForm<SomeEntity>(Privileges.Add,Privileges.Remove,Privileges.Edit);
 			entityForm.Show();
 			InitializeComponent();
 			
 			using (var model = new ModelDatabase())
 			{
-				
-				var a = model.SomeEntities.Include(s => s.SomeRef.SomeEntities).ToList();
+
+				model.SomeEntities.FirstOrDefault().SomeString = "zalupa";
+				model.SaveChanges();
 				//model.SomeEntities.Include(s => s.SomeRef.SomeEntities).First()
 			}
 			//Принимать в базу IEnumerable коллекцию, отказатся от методов получения листов внутри сущностей
+		}
+
+		private void Form1_Load(object sender, EventArgs e)
+		{
+			
 		}
 	}
 }

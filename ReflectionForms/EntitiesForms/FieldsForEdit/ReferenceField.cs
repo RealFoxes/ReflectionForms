@@ -26,12 +26,14 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 			{
 				if(att != null)
 				{
-					comboBox.Items.Add(item.GetType().GetProperties().FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString())?.GetValue(item).ToString());
+					comboBox.DisplayMember = att.ConstructorArguments[0].Value.ToString();
+					//comboBox.Items.Add(item.GetType().GetProperties().FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString())?.GetValue(item).ToString());
 				}
 				else
 				{
-					comboBox.Items.Add(item);
+					
 				}
+				comboBox.Items.Add(item);
 			}
 		}
 	}

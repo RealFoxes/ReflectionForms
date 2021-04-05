@@ -12,5 +12,6 @@ namespace ReflectionForms.EntitiesForms
 		protected static IEnumerable GetEntities => throw new NotImplementedException();
 		protected static void EditEntity(T item) => throw new NotImplementedException();
 		protected static void DeleteEntity(T item) => throw new NotImplementedException();
+		protected static void AddEntity(T item) => throw new NotImplementedException();
 	}
 }

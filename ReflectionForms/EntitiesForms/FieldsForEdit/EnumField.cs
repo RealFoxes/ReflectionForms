@@ -21,7 +21,16 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 			FieldInfo[] field_infos = property.PropertyType.GetFields();
 			for (int i = 1; i < field_infos.Length; i++)
 			{
-				comboBox.Items.Add(field_infos[i].Name);
+				var att = field_infos[i].CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName");
+				if(att != null)
+				{
+					comboBox.Items.Add(att.ConstructorArguments[0].Value.ToString());
+				}
+				else
+				{
+
+					comboBox.Items.Add(field_infos[i].Name);
+				}
 			}
 		}
 	}

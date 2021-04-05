@@ -121,6 +121,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntitiesForms\AddEntityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EntitiesForms\AddEntityForm.Designer.cs">
+      <DependentUpon>AddEntityForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EntitiesForms\Attributes.cs" />
     <Compile Include="EntitiesForms\Exceptions.cs" />
     <Compile Include="EntitiesForms\FieldsForEdit\DateTimeField.cs">
@@ -171,11 +177,17 @@
     <Compile Include="ModelDatabase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="EntitiesForms\AddEntityForm.resx">
+      <DependentUpon>AddEntityForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EntitiesForms\EntityForm.resx">
       <DependentUpon>EntityForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EntitiesForms\FieldsForEdit\StringAndIntNumbers.resx">
       <DependentUpon>StringAndIntNumbers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103251542592_v1.resx">
       <DependentUpon>202103251542592_v1.cs</DependentUpon>

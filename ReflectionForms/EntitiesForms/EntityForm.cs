@@ -14,73 +14,45 @@ using System.Windows.Forms;
 namespace ReflectionForms
 {
 
-	
+	public enum Privileges
+	{
+		Edit,
+		Remove,
+		Add
+	}
 	public partial class EntityForm<T> : Form where T : class
 	{
-		public Type[] TextBoxFieldTypes = { typeof(string), typeof(Int16), typeof(Int32), typeof(Int64),typeof(byte),typeof(char) };
-		private MethodInfo DeleteMethod, EditMethod;
+		private Type[] TextBoxFieldTypes = { typeof(string), typeof(Int16), typeof(Int32), typeof(Int64),typeof(byte),typeof(char) };
+		public MethodInfo DeleteMethod, EditMethod, AddMethod;
 		private DataTable dt;
-		public EntityForm() // Добавить реализацию прав скорее всего с помощью енамов / Добавить формы / Еще раз подумать над реализацией получаение всех инстансов из базы
+		public EntityForm(params Privileges[] privileges) // Добавить реализацию прав скорее всего с помощью енамов / Добавить формы / Еще раз подумать над реализацией получаение всех инстансов из базы
 		{
 			InitializeComponent();
 
 			if (typeof(T).GetMethod("GetEntities") == null) throw new MethodGetEntitiesIsNotImplementedException();
 
 			UpdateTable();
-			AddFields();
+			Utilities.AddFields<T>(panel);
+
 			EditMethod = typeof(T).GetMethod("EditEntity");
-			if (EditMethod == null)
+			if (EditMethod == null && privileges.Contains(Privileges.Edit))
 			{
 				buttonChange.Visible = false;
 			}
+
 			DeleteMethod = typeof(T).GetMethod("DeleteEntity");
-			if(DeleteMethod == null)
+			if(DeleteMethod == null && privileges.Contains(Privileges.Remove))
 			{
 				buttonDelete.Visible = false;
 			}
-			
-		}
-		private void AddFields()
-		{
 
-			foreach (PropertyInfo property in typeof(T).GetProperties().Reverse())
+			AddMethod = typeof(T).GetMethod("AddEntity");
+			if (AddMethod == null && privileges.Contains(Privileges.Add))
 			{
-				var propType = property.PropertyType;
-				if (property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormNotVisible") == null)
-				{
-					if (TextBoxFieldTypes.Contains(propType))
-					{
-						var uc = new StringAndIntNumbers(property);
-						uc.Dock = DockStyle.Top;
-						uc.BringToFront();
-						panel.Controls.Add(uc);
-					}
-					else if (propType == typeof(DateTime))
-					{
-						var uc = new DateTimeField(property);
-						uc.Dock = DockStyle.Top;
-						uc.BringToFront();
-						panel.Controls.Add(uc);
-					}
-					else if (property.CustomAttributes.FirstOrDefault(a =>a.AttributeType.Name == "ReflFormRef") != null)
-					{
-						var uc = new ReferenceField(property);
-						uc.Dock = DockStyle.Top;
-						uc.BringToFront();
-						panel.Controls.Add(uc);
-					}
-					else if (propType.GetTypeInfo().IsEnum)
-					{
-						var uc = new EnumField(property);
-						uc.Dock = DockStyle.Top;
-						uc.BringToFront();
-						panel.Controls.Add(uc);
-					}
-
-				}
+				buttonDelete.Visible = false;
 			}
 		}
-		private void UpdateTable()
+		public void UpdateTable()
 		{
 			dt = new DataTable();
 			//Creting header 
@@ -93,30 +65,35 @@ namespace ReflectionForms
 
 			foreach (PropertyInfo property in typeof(T).GetProperties())
 			{
-				iToHide++;
-				bool ReflFormNameWasFound = false;
+				Type columnType = property.PropertyType;
+				string columnName = property.Name;
 				foreach (CustomAttributeData att in property.CustomAttributes)
 				{
-					var attType = att.AttributeType;
+					
 					switch (att.AttributeType.Name) // Возможно посмотреть другие реализации менее костыльные с указанием конкретного атрибута, а не его наим.
 					{
 						case "ReflFormName":
-							dt.Columns.Add(new DataColumn(att.ConstructorArguments[0].Value.ToString(), property.PropertyType));
-							ReflFormNameWasFound = true;
+							columnName = att.ConstructorArguments[0].Value.ToString();
 							break;
 						case "ReflFormRef":
-							var propFromRef = property.PropertyType.GetProperties().FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString());
-							string columnName = propFromRef.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName")?.ConstructorArguments[0].Value.ToString()
+							var propFromRef = property.PropertyType
+								.GetProperties()
+								.FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString());
+							columnName = propFromRef.CustomAttributes
+								.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName")?
+								.ConstructorArguments[0].Value.ToString()
 											 ?? propFromRef.Name;
-							dt.Columns.Add(new DataColumn(columnName, propFromRef.PropertyType));
-							ReflFormNameWasFound = true;
+
+							columnType = propFromRef.PropertyType;
 							break;
 						case "ReflFormNotVisible":
 							IndexesToHide[iToHide] = true;
 							break;
 					}
 				}
-				if(!ReflFormNameWasFound) dt.Columns.Add(new DataColumn(property.Name, property.PropertyType));
+				iToHide++;
+				if (property.PropertyType.IsEnum) columnType = typeof(string);
+				dt.Columns.Add(new DataColumn(columnName, columnType));
 			}
 
 			//Filling body
@@ -131,8 +108,27 @@ namespace ReflectionForms
 				foreach (PropertyInfo property in typeof(T).GetProperties())
 				{
 					var columnId = dt.Columns.Cast<DataColumn>().FirstOrDefault(c => c.ColumnName == Utilities.GetColumnName(property)).Ordinal;
-					row[columnId] = Utilities.GetValue(property, entity);
-				}
+					if (property.PropertyType.IsEnum)
+					{
+						string nameOfEnum = Utilities.GetValue(property, entity).ToString();
+						FieldInfo field = property.PropertyType.GetField(Utilities.GetValue(property, entity).ToString());
+
+						var att = field.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName");
+						if (att != null)
+						{
+							nameOfEnum = att.ConstructorArguments[0].Value.ToString();
+						}
+
+						row[columnId] = nameOfEnum;
+
+					}
+					else
+					{
+						row[columnId] = Utilities.GetValue(property, entity);
+					}
+
+
+			}
 				dt.Rows.Add(row);
 			}
 			dataGridView.DataSource = dt;
@@ -141,8 +137,7 @@ namespace ReflectionForms
 			iToHide = 0;
 			foreach (DataGridViewColumn Column in dataGridView.Columns)
 			{
-				Column.Visible = !IndexesToHide[iToHide];
-				iToHide++;
+				Column.Visible = !IndexesToHide[iToHide++];
 			}
 
 		}
@@ -152,6 +147,11 @@ namespace ReflectionForms
 			//Добавить форму измения сущности
 		}
 
+		private void button1_Click(object sender, EventArgs e)
+		{
+			AddEntityForm<T> addEntityForm = new AddEntityForm<T>(this);
+			addEntityForm.Show();
+		}
 
 		private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
