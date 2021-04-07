@@ -28,7 +28,21 @@ namespace ReflectionForms
 		public EntityForm(params Privileges[] privileges) // Добавить реализацию прав скорее всего с помощью енамов / Добавить формы / Еще раз подумать над реализацией получаение всех инстансов из базы
 		{
 			InitializeComponent();
-
+			foreach (var privilege in privileges)
+			{
+				switch (privilege)
+				{
+					case Privileges.Edit:
+						buttonChange.Visible = true;
+						break;
+					case Privileges.Remove:
+						buttonDelete.Visible = true;
+						break;
+					case Privileges.Add:
+						buttonAdd.Visible = true;
+						break;
+				}
+			}
 			if (typeof(T).GetMethod("GetEntities") == null) throw new MethodGetEntitiesIsNotImplementedException();
 
 			UpdateTable();
@@ -144,7 +158,9 @@ namespace ReflectionForms
 
 		private void buttonChange_Click(object sender, EventArgs e)
 		{
-			//Добавить форму измения сущности
+			object entity = dataGridView.SelectedRows[0].Cells[0].Value;
+			ChangeEntityForm<T> changeEntityForm = new ChangeEntityForm<T>(this,(T)entity);
+			changeEntityForm.Show();
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -165,9 +181,13 @@ namespace ReflectionForms
 
 		private void buttonDelete_Click(object sender, EventArgs e)
 		{
-			object entity = dataGridView.SelectedRows[0].Cells[0].Value;
-			DeleteMethod.Invoke(null, new object[] { entity }); //Call delete method from entity class 
-			UpdateTable();
+
+			if (MessageBox.Show("Вы уверены что ходите удалить выбранный элемент?","Потверждение удаления", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				object entity = dataGridView.SelectedRows[0].Cells[0].Value;
+				DeleteMethod.Invoke(null, new object[] { entity }); //Call delete method from entity class 
+				UpdateTable();
+			}
 		}
 	}
 }

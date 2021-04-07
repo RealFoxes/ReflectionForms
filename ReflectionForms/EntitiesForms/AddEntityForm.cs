@@ -29,19 +29,18 @@ namespace ReflectionForms.EntitiesForms
 				var NameOfProp = uc.Tag.ToString();
 				NameOfProp = NameOfProp.Remove(0, NameOfProp.LastIndexOf('.') + 1);
 				PropertyInfo prop = entity.GetType().GetProperties().FirstOrDefault(p => p.Name == NameOfProp);
-				var att = prop.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormRef");
 				var converter = TypeDescriptor.GetConverter(prop.PropertyType);
 				foreach (Control control in uc.Controls)
 				{
 					if (control is Label) continue;
 
-					if (control is DateTimePicker)
+					if (control is DateTimePicker dateTimePicker)
 					{
 
-						prop.SetValue(entity, ((DateTimePicker)control).Value, null);
+						prop.SetValue(entity, dateTimePicker.Value, null);
 						continue;
 					}
-					if(att != null)
+					if(prop.IsReference(out CustomAttributeData att))
 					{
 						prop.SetValue(entity, ((ComboBox)control).SelectedItem, null);
 						continue;

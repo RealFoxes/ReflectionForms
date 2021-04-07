@@ -23,9 +23,6 @@ namespace ReflectionForms
 			
 			using (var model = new ModelDatabase())
 			{
-
-				model.SomeEntities.FirstOrDefault().SomeString = "zalupa";
-				model.SaveChanges();
 				//model.SomeEntities.Include(s => s.SomeRef.SomeEntities).First()
 			}
 			//Принимать в базу IEnumerable коллекцию, отказатся от методов получения листов внутри сущностей

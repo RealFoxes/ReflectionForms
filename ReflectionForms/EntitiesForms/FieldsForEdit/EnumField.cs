@@ -19,8 +19,9 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 			this.Tag = property.DeclaringType.FullName + "." + property.Name;
 			label.Text = Utilities.GetColumnName(property);
 			FieldInfo[] field_infos = property.PropertyType.GetFields();
-			for (int i = 1; i < field_infos.Length; i++)
+			for (int i = 0; i < field_infos.Length; i++)
 			{
+				if (field_infos[i].Name == "value__") continue;
 				var att = field_infos[i].CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName");
 				if(att != null)
 				{

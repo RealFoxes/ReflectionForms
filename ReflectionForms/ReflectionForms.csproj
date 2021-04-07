@@ -128,6 +128,12 @@
       <DependentUpon>AddEntityForm.cs</DependentUpon>
     </Compile>
     <Compile Include="EntitiesForms\Attributes.cs" />
+    <Compile Include="EntitiesForms\ChangeEntityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EntitiesForms\ChangeEntityForm.Designer.cs">
+      <DependentUpon>ChangeEntityForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EntitiesForms\Exceptions.cs" />
     <Compile Include="EntitiesForms\FieldsForEdit\DateTimeField.cs">
       <SubType>UserControl</SubType>
@@ -179,6 +185,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="EntitiesForms\AddEntityForm.resx">
       <DependentUpon>AddEntityForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EntitiesForms\ChangeEntityForm.resx">
+      <DependentUpon>ChangeEntityForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EntitiesForms\EntityForm.resx">
       <DependentUpon>EntityForm.cs</DependentUpon>

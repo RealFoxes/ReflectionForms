@@ -17,8 +17,7 @@ namespace ReflectionForms.EntitiesForms
 		public static string GetColumnName(PropertyInfo property)
 		{
 			string columnName;
-			var att = property.CustomAttributes.FirstOrDefault(a => a.AttributeType == typeof(ReflFormRef)); // Try to find reference attribute
-			if (att != null)
+			if (property.IsReference(out CustomAttributeData att))
 			{
 				var propFromRef = property.PropertyType.GetProperties().FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString());
 				//Getting property in reference
@@ -39,10 +38,8 @@ namespace ReflectionForms.EntitiesForms
 		public static object GetValue<Entity>(PropertyInfo property, Entity entity)
 		{
 			object value;
-			var att = property.CustomAttributes
-				.FirstOrDefault(a => a.AttributeType == typeof(ReflFormRef)); // Try to find reference attribute
 
-			if (att != null)
+			if (property.IsReference(out CustomAttributeData att))
 			{
 				var propFromRef = property.PropertyType.GetProperties()
 					.FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString());
@@ -77,7 +74,7 @@ namespace ReflectionForms.EntitiesForms
 						uc.BringToFront();
 						control.Controls.Add(uc);
 					}
-					else if (property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormRef") != null)
+					else if (property.IsReference(out CustomAttributeData att))
 					{
 						var uc = new ReferenceField(property);
 						uc.Dock = DockStyle.Top;
@@ -92,6 +89,60 @@ namespace ReflectionForms.EntitiesForms
 						control.Controls.Add(uc);
 					}
 
+				}
+			}
+		}
+		public static void FillFields<T>(Control control, T entity)
+		{
+			if (!control.HasChildren) throw new ContorlHasNoChildren();
+
+			foreach (Control uc in control.Controls)
+			{
+				if (!uc.HasChildren) throw new ContorlHasNoChildren();
+
+				//Get currect prop for a UserControl
+				var NameOfProp = uc.Tag.ToString();
+				NameOfProp = NameOfProp.Remove(0, NameOfProp.LastIndexOf('.') + 1);
+				PropertyInfo prop = entity.GetType().GetProperties().FirstOrDefault(p => p.Name == NameOfProp);
+				foreach (Control itemOfField in uc.Controls) // Переписать это условие, а именно добавить инстанс листа из вне что бы сохранялись ссылки и не приходилось искать в новом листе по проперти
+				{
+
+					if (itemOfField is Label) continue;
+					if (itemOfField is DateTimePicker dateTimePicker)
+					{
+						dateTimePicker.Value = (DateTime)prop.GetValue(entity);
+						continue;
+					}
+					if (prop.IsReference(out CustomAttributeData att)) // If prop is a reference
+					{
+						ComboBox comboBox = (ComboBox)itemOfField;
+						var ListOfEntities = comboBox.Items.Cast<object>();
+
+						object valueFromEntity = GetValue(prop,entity);
+						object valToShow = null;
+
+						foreach (object entityFromComboBox in ListOfEntities)
+						{
+							var valueFromPropertyFromRef = entityFromComboBox.GetType()
+							 .GetProperties()
+							 .FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString()).GetValue(entityFromComboBox);
+
+							if (valueFromPropertyFromRef.Equals(valueFromEntity))
+							{
+								valToShow = entityFromComboBox;
+							}
+						}
+						comboBox.SelectedItem = valToShow;
+						continue;
+					}
+					if (prop.PropertyType.IsEnum)
+					{
+						((ComboBox)itemOfField).SelectedIndex = (int)prop.GetValue(entity);
+						continue;
+					}
+
+
+					itemOfField.Text = prop.GetValue(entity).ToString();
 				}
 			}
 		}
@@ -120,6 +171,12 @@ namespace ReflectionForms.EntitiesForms
 			}
 
 			return null; // could also return string.Empty
+		}
+
+		public static bool IsReference(this PropertyInfo property, out CustomAttributeData attributeData)
+		{
+			attributeData = property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormRef");
+			return attributeData != null;
 		}
 }
 }

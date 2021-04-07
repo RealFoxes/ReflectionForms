@@ -9,9 +9,11 @@ namespace ReflectionForms.EntitiesForms
 	[Serializable]
 	class MethodGetEntitiesIsNotImplementedException : Exception
 	{
-		public MethodGetEntitiesIsNotImplementedException()
-		{
-		}
+		public MethodGetEntitiesIsNotImplementedException() { }
+	}
+	class ContorlHasNoChildren : Exception
+	{
+		public ContorlHasNoChildren() { }
 	}
 
 }
