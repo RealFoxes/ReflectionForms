@@ -12,6 +12,13 @@ namespace ReflectionForms.Entities
 {
 	public class SomeEntity : ReflEntity<SomeEntity>
 	{
+		public enum SomeEnum
+		{
+			[ReflFormName("НекийПеречеслитель1")]
+			SomeEnum1,
+			[ReflFormName("НекийПеречеслитель2")]
+			SomeEnum2
+		}
 		[Key,ReflFormName("Тест")] //Колонка в таблице / Лейбл над тексто боксом или другим контролом
 		public int SomeId { get; set; }
 		public int SomeProp { get; set; }
@@ -44,13 +51,17 @@ namespace ReflectionForms.Entities
 				model.SaveChanges();
 			}
 		}
-		public new static void EditEntity(SomeEntity someEntity)
+		public new static void EditEntity(SomeEntity oldSomeEntity,SomeEntity newSomeEntity)
 		{
-			using (var model = new ModelDatabase())
+			using (var model = new ModelDatabase()) // Где то тут баг заебись
 			{
-				var toRemove = model.SomeEntities.FirstOrDefault(s => s.SomeId == someEntity.SomeId);
-				model.SomeEntities.Remove(toRemove);
-				model.SomeEntities.Add(someEntity);
+				var toChange = model.SomeEntities.FirstOrDefault(s => s.SomeId == oldSomeEntity.SomeId);
+				toChange.SomeId = newSomeEntity.SomeId;
+				toChange.SomeProp = newSomeEntity.SomeProp;
+				toChange.SomeRef = newSomeEntity.SomeRef;
+				toChange.someEnum = newSomeEntity.someEnum;
+				toChange.SomeDate = newSomeEntity.SomeDate;
+				toChange.SomeString = newSomeEntity.SomeString;
 				model.SaveChanges();
 			}
 		}
@@ -62,12 +73,5 @@ namespace ReflectionForms.Entities
 				model.SaveChanges();
 			}
 		}
-	}
-	public enum SomeEnum
-	{
-		[ReflFormName("НекийПеречеслитель1")]
-		SomeEnum1,
-		[ReflFormName("НекийПеречеслитель2")]
-		SomeEnum2
 	}
 }

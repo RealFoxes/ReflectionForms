@@ -59,6 +59,7 @@ namespace ReflectionForms.EntitiesForms
 			this.buttonCancel.TabIndex = 2;
 			this.buttonCancel.Text = "Отменить";
 			this.buttonCancel.UseVisualStyleBackColor = true;
+			this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
 			// 
 			// AddEntityForm
 			// 

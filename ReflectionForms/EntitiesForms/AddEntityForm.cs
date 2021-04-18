@@ -59,8 +59,17 @@ namespace ReflectionForms.EntitiesForms
 
 			}
 			MainForm.AddMethod.Invoke(null, new object[] { entity });
-			MainForm.UpdateTable();
-			MessageBox.Show("Успешно добавлено");
+			Utilities.AddRowToDataSource(entity, MainForm.dt);
+			this.DialogResult = DialogResult.OK;
+			Close();
+			MainForm.announcer.SendMessage("Успешно добавлено"); // Реализовать анонсер
+			
+		}
+
+		private void buttonCancel_Click(object sender, EventArgs e)
+		{
+			this.DialogResult = DialogResult.Cancel;
+			Close();
 		}
 	}
 }

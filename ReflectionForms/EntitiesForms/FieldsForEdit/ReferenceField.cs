@@ -14,17 +14,18 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 {
 	public partial class ReferenceField : UserControl
 	{
+		public List<object> EntitiesList { get; set; }
 		public ReferenceField(PropertyInfo property)
 		{
 			InitializeComponent();
 			this.Tag = property.DeclaringType.FullName + "." + property.Name;
 			label.Text = Utilities.GetColumnName(property);
-			var List = ((IEnumerable)property.PropertyType.GetMethod("GetEntities").Invoke(null, null)).Cast<object>().ToList();
+			EntitiesList = ((IEnumerable)property.PropertyType.GetMethod("GetEntities").Invoke(null, null)).Cast<object>().ToList();
 			if (property.IsReference(out CustomAttributeData att))
 			{
 				comboBox.DisplayMember = att.ConstructorArguments[0].Value.ToString();
 			}
-			comboBox.DataSource = List;
+			comboBox.DataSource = EntitiesList;
 		}
 	}
 }

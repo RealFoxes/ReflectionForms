@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -118,9 +119,8 @@ namespace ReflectionForms.EntitiesForms
 						ComboBox comboBox = (ComboBox)itemOfField;
 						var ListOfEntities = comboBox.Items.Cast<object>();
 
-						object valueFromEntity = GetValue(prop,entity);
+						object valueFromEntity = GetValue(prop, entity);
 						object valToShow = null;
-
 						foreach (object entityFromComboBox in ListOfEntities)
 						{
 							var valueFromPropertyFromRef = entityFromComboBox.GetType()
@@ -146,37 +146,37 @@ namespace ReflectionForms.EntitiesForms
 				}
 			}
 		}
-		public static string GetDescription<T>(this T e) where T : IConvertible
-		{
-			if (e is Enum)
-			{
-				Type type = e.GetType();
-				Array values = System.Enum.GetValues(type);
-
-				foreach (int val in values)
-				{
-					if (val == e.ToInt32(CultureInfo.InvariantCulture))
-					{
-						var memInfo = type.GetMember(type.GetEnumName(val));
-						var descriptionAttribute = memInfo[0]
-							.GetCustomAttributes(typeof(DescriptionAttribute), false)
-							.FirstOrDefault() as DescriptionAttribute;
-
-						if (descriptionAttribute != null)
-						{
-							return descriptionAttribute.Description;
-						}
-					}
-				}
-			}
-
-			return null; // could also return string.Empty
-		}
 
 		public static bool IsReference(this PropertyInfo property, out CustomAttributeData attributeData)
 		{
 			attributeData = property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormRef");
 			return attributeData != null;
 		}
-}
+		public static void AddRowToDataSource<T>(T entity, DataTable dt)
+		{
+				DataRow row = dt.NewRow();
+				row[0] = entity;
+				foreach (PropertyInfo property in typeof(T).GetProperties())
+				{
+					var columnId = dt.Columns.Cast<DataColumn>().FirstOrDefault(c => c.ColumnName == Utilities.GetColumnName(property)).Ordinal;
+					if (property.PropertyType.IsEnum)
+					{
+						string nameOfEnum = Utilities.GetValue(property, entity).ToString();
+						FieldInfo field = property.PropertyType.GetField(Utilities.GetValue(property, entity).ToString());
+
+						var att = field.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName");
+						if (att != null)
+						{
+							nameOfEnum = att.ConstructorArguments[0].Value.ToString();
+						}
+						row[columnId] = nameOfEnum;
+					}
+					else
+					{
+						row[columnId] = Utilities.GetValue(property, entity);
+					}
+				}
+				dt.Rows.Add(row);
+		}
+	}
 }

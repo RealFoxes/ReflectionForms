@@ -29,22 +29,13 @@ namespace ReflectionForms
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
 			this.SuspendLayout();
-			// 
-			// dateTimePicker1
-			// 
-			this.dateTimePicker1.Location = new System.Drawing.Point(196, 154);
-			this.dateTimePicker1.Name = "dateTimePicker1";
-			this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
-			this.dateTimePicker1.TabIndex = 0;
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
-			this.Controls.Add(this.dateTimePicker1);
 			this.Name = "Form1";
 			this.Text = "Form1";
 			this.Load += new System.EventHandler(this.Form1_Load);
@@ -53,8 +44,6 @@ namespace ReflectionForms
 		}
 
 		#endregion
-
-		private System.Windows.Forms.DateTimePicker dateTimePicker1;
 	}
 }
 

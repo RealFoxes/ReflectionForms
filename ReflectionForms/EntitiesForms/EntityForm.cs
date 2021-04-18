@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinFormAnnouncer;
 
 namespace ReflectionForms
 {
@@ -22,12 +23,13 @@ namespace ReflectionForms
 	}
 	public partial class EntityForm<T> : Form where T : class
 	{
-		private Type[] TextBoxFieldTypes = { typeof(string), typeof(Int16), typeof(Int32), typeof(Int64),typeof(byte),typeof(char) };
 		public MethodInfo DeleteMethod, EditMethod, AddMethod;
-		private DataTable dt;
+		public DataTable dt;
+		public AnnouncerControler announcer;
 		public EntityForm(params Privileges[] privileges) // Добавить реализацию прав скорее всего с помощью енамов / Добавить формы / Еще раз подумать над реализацией получаение всех инстансов из базы
 		{
 			InitializeComponent();
+			announcer = new AnnouncerControler(panelAnnounce, 5);
 			foreach (var privilege in privileges)
 			{
 				switch (privilege)
@@ -117,33 +119,7 @@ namespace ReflectionForms
 			{
 				T entity = entities[i];
 
-				DataRow row = dt.NewRow();
-				row[0] = entity;
-				foreach (PropertyInfo property in typeof(T).GetProperties())
-				{
-					var columnId = dt.Columns.Cast<DataColumn>().FirstOrDefault(c => c.ColumnName == Utilities.GetColumnName(property)).Ordinal;
-					if (property.PropertyType.IsEnum)
-					{
-						string nameOfEnum = Utilities.GetValue(property, entity).ToString();
-						FieldInfo field = property.PropertyType.GetField(Utilities.GetValue(property, entity).ToString());
-
-						var att = field.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName");
-						if (att != null)
-						{
-							nameOfEnum = att.ConstructorArguments[0].Value.ToString();
-						}
-
-						row[columnId] = nameOfEnum;
-
-					}
-					else
-					{
-						row[columnId] = Utilities.GetValue(property, entity);
-					}
-
-
-			}
-				dt.Rows.Add(row);
+				Utilities.AddRowToDataSource(entity, dt);
 			}
 			dataGridView.DataSource = dt;
 
@@ -158,15 +134,36 @@ namespace ReflectionForms
 
 		private void buttonChange_Click(object sender, EventArgs e)
 		{
-			object entity = dataGridView.SelectedRows[0].Cells[0].Value;
-			ChangeEntityForm<T> changeEntityForm = new ChangeEntityForm<T>(this,(T)entity);
-			changeEntityForm.Show();
+			if (dataGridView.SelectedRows.Count < 1) return;
+			var row = dataGridView.SelectedRows[0];
+			if (row.Cells[0].Value == null) return;
+			ChangeEntityForm<T> changeEntityForm = new ChangeEntityForm<T>(this, row);
+			if(changeEntityForm.ShowDialog() == DialogResult.OK)
+			{
+				announcer.SendMessage("Успешно изменено");
+			}
+			else
+			{
+				announcer.SendMessage("Отмена изменения");
+			}
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void buttonAdd_Click(object sender, EventArgs e)
 		{
 			AddEntityForm<T> addEntityForm = new AddEntityForm<T>(this);
-			addEntityForm.Show();
+			if (addEntityForm.ShowDialog() == DialogResult.OK)
+			{
+				announcer.SendMessage("Успешно добавлено");
+			}
+			else
+			{
+				announcer.SendMessage("Отмена добавления");
+			}
+		}
+
+		private void EntityForm_DoubleClick(object sender, EventArgs e)
+		{
+			UpdateTable();
 		}
 
 		private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -186,7 +183,11 @@ namespace ReflectionForms
 			{
 				object entity = dataGridView.SelectedRows[0].Cells[0].Value;
 				DeleteMethod.Invoke(null, new object[] { entity }); //Call delete method from entity class 
-				UpdateTable();
+				dataGridView.Rows.RemoveAt(dataGridView.SelectedRows[0].Index);
+				announcer.SendMessage("Успешно удаленно");
+
+
+
 			}
 		}
 	}

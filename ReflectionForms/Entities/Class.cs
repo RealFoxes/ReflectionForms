@@ -1,6 +1,7 @@
 ﻿using ReflectionForms.EntitiesForms;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ namespace ReflectionForms.Entities
 		{
 			using (var model = new ModelDatabase())
 			{
-				return model.Classes.ToList();
+				return model.Classes.Include(cl => cl.SomeEntities.Select(s => s.SomeRef)).ToList();
 			}
 		}
 	}

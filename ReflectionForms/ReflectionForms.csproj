@@ -234,7 +234,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\WinFormAnnouncer\WinFormAnnouncer.csproj">
+      <Project>{BE62BCA2-1422-4174-A186-325B3F6802DC}</Project>
+      <Name>WinFormAnnouncer</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

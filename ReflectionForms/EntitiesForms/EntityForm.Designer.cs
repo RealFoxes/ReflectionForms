@@ -34,6 +34,7 @@ namespace ReflectionForms
 			this.buttonChange = new System.Windows.Forms.Button();
 			this.panel = new System.Windows.Forms.Panel();
 			this.buttonAdd = new System.Windows.Forms.Button();
+			this.panelAnnounce = new System.Windows.Forms.Panel();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -47,7 +48,7 @@ namespace ReflectionForms
 			this.dataGridView.ReadOnly = true;
 			this.dataGridView.RowHeadersVisible = false;
 			this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridView.Size = new System.Drawing.Size(707, 594);
+			this.dataGridView.Size = new System.Drawing.Size(707, 571);
 			this.dataGridView.TabIndex = 0;
 			this.dataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellDoubleClick);
 			// 
@@ -76,9 +77,9 @@ namespace ReflectionForms
 			// panel
 			// 
 			this.panel.AutoScroll = true;
-			this.panel.Location = new System.Drawing.Point(725, 12);
+			this.panel.Location = new System.Drawing.Point(725, 35);
 			this.panel.Name = "panel";
-			this.panel.Size = new System.Drawing.Size(269, 542);
+			this.panel.Size = new System.Drawing.Size(269, 519);
 			this.panel.TabIndex = 3;
 			// 
 			// buttonAdd
@@ -90,13 +91,22 @@ namespace ReflectionForms
 			this.buttonAdd.Text = "Добавить";
 			this.buttonAdd.UseVisualStyleBackColor = true;
 			this.buttonAdd.Visible = false;
-			this.buttonAdd.Click += new System.EventHandler(this.button1_Click);
+			this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
+			// 
+			// panelAnnounce
+			// 
+			this.panelAnnounce.AutoScroll = true;
+			this.panelAnnounce.Location = new System.Drawing.Point(12, 589);
+			this.panelAnnounce.Name = "panelAnnounce";
+			this.panelAnnounce.Size = new System.Drawing.Size(707, 28);
+			this.panelAnnounce.TabIndex = 6;
 			// 
 			// EntityForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1006, 618);
+			this.Controls.Add(this.panelAnnounce);
 			this.Controls.Add(this.buttonAdd);
 			this.Controls.Add(this.panel);
 			this.Controls.Add(this.buttonChange);
@@ -104,17 +114,18 @@ namespace ReflectionForms
 			this.Controls.Add(this.dataGridView);
 			this.Name = "EntityForm";
 			this.Text = "EntityForm";
+			this.DoubleClick += new System.EventHandler(this.EntityForm_DoubleClick);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
-
-		private System.Windows.Forms.DataGridView dataGridView;
 		private System.Windows.Forms.Button buttonDelete;
 		private System.Windows.Forms.Button buttonChange;
 		private System.Windows.Forms.Panel panel;
 		private System.Windows.Forms.Button buttonAdd;
+		private System.Windows.Forms.DataGridView dataGridView;
+		private System.Windows.Forms.Panel panelAnnounce;
 	}
 }
