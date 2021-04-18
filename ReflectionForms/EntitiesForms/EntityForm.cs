@@ -23,49 +23,36 @@ namespace ReflectionForms
 	}
 	public partial class EntityForm<T> : Form where T : class
 	{
-		public MethodInfo DeleteMethod, EditMethod, AddMethod;
+		public MethodInfo DeleteMethod, EditMethod, AddMethod, GetEntities;
 		public DataTable dt;
 		public AnnouncerControler announcer;
 		public EntityForm(params Privileges[] privileges) // Добавить реализацию прав скорее всего с помощью енамов / Добавить формы / Еще раз подумать над реализацией получаение всех инстансов из базы
 		{
 			InitializeComponent();
 			announcer = new AnnouncerControler(panelAnnounce, 5);
-			foreach (var privilege in privileges)
-			{
-				switch (privilege)
-				{
-					case Privileges.Edit:
-						buttonChange.Visible = true;
-						break;
-					case Privileges.Remove:
-						buttonDelete.Visible = true;
-						break;
-					case Privileges.Add:
-						buttonAdd.Visible = true;
-						break;
-				}
-			}
+
+			#region Adding methods and turn on visible buttons if exist required permiss
+
+			GetEntities = typeof(T).GetMethod("GetEntities");
 			if (typeof(T).GetMethod("GetEntities") == null) throw new MethodGetEntitiesIsNotImplementedException();
+
+			EditMethod = typeof(T).GetMethod("EditEntity");
+			DeleteMethod = typeof(T).GetMethod("DeleteEntity");
+			AddMethod = typeof(T).GetMethod("AddEntity");
+
+			#endregion
+
+			buttonAdd.Visible = AddMethod != null && privileges.Contains(Privileges.Add);
+			buttonDelete.Visible = DeleteMethod != null && privileges.Contains(Privileges.Remove);
+			buttonChange.Visible = EditMethod != null && privileges.Contains(Privileges.Edit);
 
 			UpdateTable();
 			Utilities.AddFields<T>(panel);
 
-			EditMethod = typeof(T).GetMethod("EditEntity");
-			if (EditMethod == null && privileges.Contains(Privileges.Edit))
-			{
-				buttonChange.Visible = false;
-			}
 
-			DeleteMethod = typeof(T).GetMethod("DeleteEntity");
-			if(DeleteMethod == null && privileges.Contains(Privileges.Remove))
+			foreach (var item in typeof(T).GetProperties())
 			{
-				buttonDelete.Visible = false;
-			}
-
-			AddMethod = typeof(T).GetMethod("AddEntity");
-			if (AddMethod == null && privileges.Contains(Privileges.Add))
-			{
-				buttonDelete.Visible = false;
+				comboBoxSearch.Items.Add(Utilities.GetColumnName(item));
 			}
 		}
 		public void UpdateTable()
@@ -161,25 +148,32 @@ namespace ReflectionForms
 			}
 		}
 
-		private void EntityForm_DoubleClick(object sender, EventArgs e)
+		private void textBoxSearch_TextChanged(object sender, EventArgs e)
 		{
-			UpdateTable();
-		}
 
-		private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-		{
-			//e.RowIndex.ToString();
-				//Реализовать добавление в строки инфы
-			//foreach (Control item in panel.Controls)
-			//{
-			//	Console.WriteLine(item.Tag);
-			//}
+			if (comboBoxSearch.Text == "")
+			{
+				announcer.SendMessage("Выберите колонку");
+			}
+			else
+			{
+				CurrencyManager currencyManager = (CurrencyManager)BindingContext[dataGridView.DataSource];
+				currencyManager.SuspendBinding();
+
+				foreach (DataGridViewRow row in dataGridView.Rows)
+				{
+					if (row.Cells[0].Value == null) continue;
+					row.Visible = row.Cells[comboBoxSearch.Text].Value.ToString().Contains(textBoxSearch.Text);
+				}
+
+				currencyManager.ResumeBinding();
+			}
 		}
 
 		private void buttonDelete_Click(object sender, EventArgs e)
 		{
 
-			if (MessageBox.Show("Вы уверены что ходите удалить выбранный элемент?","Потверждение удаления", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			if (MessageBox.Show("Вы уверены что ходите удалить выбранный элемент?", "Потверждение удаления", MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				object entity = dataGridView.SelectedRows[0].Cells[0].Value;
 				DeleteMethod.Invoke(null, new object[] { entity }); //Call delete method from entity class 
@@ -190,5 +184,23 @@ namespace ReflectionForms
 
 			}
 		}
+
+		private void EntityForm_DoubleClick(object sender, EventArgs e)
+		{
+			UpdateTable();//!!!!!!!!!!!!!!!!!!!!
+		}
+
+		private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+		{
+			//????
+			//e.RowIndex.ToString();
+				//Реализовать добавление в строки инфы
+			//foreach (Control item in panel.Controls)
+			//{
+			//	Console.WriteLine(item.Tag);
+			//}
+		}
+
+		
 	}
 }

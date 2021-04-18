@@ -35,20 +35,25 @@ namespace ReflectionForms
 			this.panel = new System.Windows.Forms.Panel();
 			this.buttonAdd = new System.Windows.Forms.Button();
 			this.panelAnnounce = new System.Windows.Forms.Panel();
+			this.comboBoxSearch = new System.Windows.Forms.ComboBox();
+			this.textBoxSearch = new System.Windows.Forms.TextBox();
+			this.labelSearch = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// dataGridView
 			// 
+			this.dataGridView.AllowUserToAddRows = false;
+			this.dataGridView.AllowUserToDeleteRows = false;
 			this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridView.Location = new System.Drawing.Point(12, 12);
+			this.dataGridView.Location = new System.Drawing.Point(12, 35);
 			this.dataGridView.MultiSelect = false;
 			this.dataGridView.Name = "dataGridView";
 			this.dataGridView.ReadOnly = true;
 			this.dataGridView.RowHeadersVisible = false;
 			this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridView.Size = new System.Drawing.Size(707, 571);
+			this.dataGridView.Size = new System.Drawing.Size(707, 548);
 			this.dataGridView.TabIndex = 0;
 			this.dataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellDoubleClick);
 			// 
@@ -101,11 +106,40 @@ namespace ReflectionForms
 			this.panelAnnounce.Size = new System.Drawing.Size(707, 28);
 			this.panelAnnounce.TabIndex = 6;
 			// 
+			// comboBoxSearch
+			// 
+			this.comboBoxSearch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxSearch.FormattingEnabled = true;
+			this.comboBoxSearch.Location = new System.Drawing.Point(61, 11);
+			this.comboBoxSearch.Name = "comboBoxSearch";
+			this.comboBoxSearch.Size = new System.Drawing.Size(171, 21);
+			this.comboBoxSearch.TabIndex = 7;
+			// 
+			// textBoxSearch
+			// 
+			this.textBoxSearch.Location = new System.Drawing.Point(238, 12);
+			this.textBoxSearch.Name = "textBoxSearch";
+			this.textBoxSearch.Size = new System.Drawing.Size(161, 20);
+			this.textBoxSearch.TabIndex = 8;
+			this.textBoxSearch.TextChanged += new System.EventHandler(this.textBoxSearch_TextChanged);
+			// 
+			// labelSearch
+			// 
+			this.labelSearch.AutoSize = true;
+			this.labelSearch.Location = new System.Drawing.Point(12, 11);
+			this.labelSearch.Name = "labelSearch";
+			this.labelSearch.Size = new System.Drawing.Size(42, 13);
+			this.labelSearch.TabIndex = 9;
+			this.labelSearch.Text = "Поиск:";
+			// 
 			// EntityForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1006, 618);
+			this.Controls.Add(this.labelSearch);
+			this.Controls.Add(this.textBoxSearch);
+			this.Controls.Add(this.comboBoxSearch);
 			this.Controls.Add(this.panelAnnounce);
 			this.Controls.Add(this.buttonAdd);
 			this.Controls.Add(this.panel);
@@ -117,6 +151,7 @@ namespace ReflectionForms
 			this.DoubleClick += new System.EventHandler(this.EntityForm_DoubleClick);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -127,5 +162,8 @@ namespace ReflectionForms
 		private System.Windows.Forms.Button buttonAdd;
 		private System.Windows.Forms.DataGridView dataGridView;
 		private System.Windows.Forms.Panel panelAnnounce;
+		private System.Windows.Forms.ComboBox comboBoxSearch;
+		private System.Windows.Forms.TextBox textBoxSearch;
+		private System.Windows.Forms.Label labelSearch;
 	}
 }

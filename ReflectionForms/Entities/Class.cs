@@ -13,18 +13,19 @@ namespace ReflectionForms.Entities
 	{
 		[Key, ReflFormName("ЫД")]
 		public int Id { get; set; }
+
 		public int MyProperty { get; set; }
+
 		public List<SomeEntity> SomeEntities { get; set; }
+
 		public Class()
 		{
 			SomeEntities = new List<SomeEntity>();
 		}
 		public new static IEnumerable<Class> GetEntities()
 		{
-			using (var model = new ModelDatabase())
-			{
-				return model.Classes.Include(cl => cl.SomeEntities.Select(s => s.SomeRef)).ToList();
-			}
+			var model = Form1.model;
+			return model.Classes.Include(cl => cl.SomeEntities.Select(s => s.SomeRef)).ToList();
 		}
 	}
 }
