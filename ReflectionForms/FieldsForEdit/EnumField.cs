@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ReflectionForms.EntitiesForms.FieldsForEdit
+namespace ReflectionForms.FieldsForEdit
 {
 	public partial class EnumField : UserControl
 	{
@@ -23,7 +16,7 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 			{
 				if (field_infos[i].Name == "value__") continue;
 				var att = field_infos[i].CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName");
-				if(att != null)
+				if (att != null)
 				{
 					comboBox.Items.Add(att.ConstructorArguments[0].Value.ToString());
 				}

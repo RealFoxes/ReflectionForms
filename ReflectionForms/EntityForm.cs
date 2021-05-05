@@ -1,14 +1,7 @@
-﻿using ReflectionForms.EntitiesForms;
-using ReflectionForms.EntitiesForms.FieldsForEdit;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinFormAnnouncer;
 
@@ -48,7 +41,7 @@ namespace ReflectionForms
 			Dt = new DataTable();
 			//Creting header 
 
-			bool[] IndexesToHide = new bool[typeof(T).GetProperties().Length+1]; // Recording column which need to hide
+			bool[] IndexesToHide = new bool[typeof(T).GetProperties().Length + 1]; // Recording column which need to hide
 			int iToHide = 0;
 
 			Dt.Columns.Add(new DataColumn("Entity", typeof(T)));
@@ -60,7 +53,7 @@ namespace ReflectionForms
 				string columnName = property.Name;
 				foreach (CustomAttributeData att in property.CustomAttributes)
 				{
-					
+
 					switch (att.AttributeType.Name) // Возможно посмотреть другие реализации менее костыльные с указанием конкретного атрибута, а не его наим.
 					{
 						case "ReflFormName":
@@ -96,7 +89,7 @@ namespace ReflectionForms
 			{
 				Utilities.AddRowToDataSource(entity, Dt);
 			}
-				
+
 			dataGridView.DataSource = Dt;
 
 			//Hide column with att and entity
@@ -114,7 +107,7 @@ namespace ReflectionForms
 			var row = dataGridView.SelectedRows[0];
 			if (row.Cells[0].Value == null) return;
 			ChangeEntityForm<T> changeEntityForm = new ChangeEntityForm<T>(this, row);
-			if(changeEntityForm.ShowDialog() == DialogResult.OK)
+			if (changeEntityForm.ShowDialog() == DialogResult.OK)
 			{
 				Announcer.SendMessage("Успешно изменено");
 			}
@@ -185,13 +178,13 @@ namespace ReflectionForms
 		{
 			//????
 			//e.RowIndex.ToString();
-				//Реализовать добавление в строки инфы
+			//Реализовать добавление в строки инфы
 			//foreach (Control item in panel.Controls)
 			//{
 			//	Console.WriteLine(item.Tag);
 			//}
 		}
 
-		
+
 	}
 }

@@ -1,7 +1,7 @@
 ﻿
-namespace ReflectionForms.EntitiesForms.FieldsForEdit
+namespace ReflectionForms.FieldsForEdit
 {
-	partial class StringAndIntNumbers
+	partial class ReferenceField
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -30,7 +30,7 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 		private void InitializeComponent()
 		{
 			this.label = new System.Windows.Forms.Label();
-			this.textBox = new System.Windows.Forms.TextBox();
+			this.comboBox = new System.Windows.Forms.ComboBox();
 			this.SuspendLayout();
 			// 
 			// label
@@ -42,18 +42,18 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 			this.label.TabIndex = 0;
 			this.label.Text = "label1";
 			// 
-			// textBox
+			// comboBox
 			// 
-			this.textBox.Location = new System.Drawing.Point(0, 16);
-			this.textBox.Name = "textBox";
-			this.textBox.Size = new System.Drawing.Size(147, 20);
-			this.textBox.TabIndex = 1;
+			this.comboBox.Location = new System.Drawing.Point(0, 16);
+			this.comboBox.Name = "comboBox";
+			this.comboBox.Size = new System.Drawing.Size(147, 20);
+			this.comboBox.TabIndex = 1;
 			// 
 			// StringAndIntNumbers
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.textBox);
+			this.Controls.Add(this.comboBox);
 			this.Controls.Add(this.label);
 			this.Name = "";
 			this.Size = new System.Drawing.Size(150, 40);
@@ -65,6 +65,6 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 		#endregion
 
 		private System.Windows.Forms.Label label;
-		private System.Windows.Forms.TextBox textBox;
+		private System.Windows.Forms.ComboBox comboBox;
 	}
 }

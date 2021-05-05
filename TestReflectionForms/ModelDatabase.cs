@@ -1,10 +1,8 @@
 using MySql.Data.EntityFramework;
-using ReflectionForms.Entities;
-using System;
 using System.Data.Entity;
-using System.Linq;
+using TestReflectionForms.Entities;
 
-namespace ReflectionForms
+namespace TestReflectionForms
 {
 	[DbConfigurationType(typeof(MySqlEFConfiguration))]
 	public class ModelDatabase : DbContext

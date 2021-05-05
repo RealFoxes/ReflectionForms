@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReflectionForms", "Reflecti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormAnnouncer", "WinFormAnnouncer\WinFormAnnouncer.csproj", "{BE62BCA2-1422-4174-A186-325B3F6802DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestReflectionForms", "TestReflectionForms\TestReflectionForms.csproj", "{1FBF5843-9CAA-4B37-902B-3839D4E978A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BE62BCA2-1422-4174-A186-325B3F6802DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE62BCA2-1422-4174-A186-325B3F6802DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE62BCA2-1422-4174-A186-325B3F6802DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FBF5843-9CAA-4B37-902B-3839D4E978A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FBF5843-9CAA-4B37-902B-3839D4E978A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FBF5843-9CAA-4B37-902B-3839D4E978A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FBF5843-9CAA-4B37-902B-3839D4E978A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ReflectionForms.EntitiesForms
+namespace ReflectionForms
 {
 	[Serializable]
 	class MethodGetEntitiesIsNotImplementedException : Exception

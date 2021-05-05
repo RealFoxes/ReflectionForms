@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WinFormAnnouncer
@@ -13,7 +7,7 @@ namespace WinFormAnnouncer
 	public partial class Message : UserControl
 	{
 		public AnnouncerControler Announcer { get; set; }
-		public Message(string Message, int SecToDie,AnnouncerControler announcer, Font font = null)
+		public Message(string Message, int SecToDie, AnnouncerControler announcer, Font font = null)
 		{
 			InitializeComponent();
 			this.BringToFront();

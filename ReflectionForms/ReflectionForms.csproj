@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{CEE06E2E-B6A7-4C9C-BDA8-455896298AF9}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>ReflectionForms</RootNamespace>
     <AssemblyName>ReflectionForms</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -50,6 +50,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.5\lib\BouncyCastle.Crypto.dll</HintPath>
@@ -71,12 +74,6 @@
     </Reference>
     <Reference Include="K4os.Hash.xxHash, Version=1.0.6.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
       <HintPath>..\packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>..\..\..\v4.5.2\MySql.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data.EntityFramework">
-      <HintPath>..\..\..\v4.5.2\MySql.Data.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Renci.SshNet, Version=2020.0.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\packages\SSH.NET.2020.0.0\lib\net40\Renci.SshNet.dll</HintPath>
@@ -113,95 +110,68 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Ubiety.Dns.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.8.0.23\lib\net452\Ubiety.Dns.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Zstandard.Net, Version=1.1.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.8.0.23\lib\net452\Zstandard.Net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntitiesForms\AddEntityForm.cs">
+    <Compile Include="AddEntityForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EntitiesForms\AddEntityForm.Designer.cs">
+    <Compile Include="AddEntityForm.Designer.cs">
       <DependentUpon>AddEntityForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EntitiesForms\Attributes.cs" />
-    <Compile Include="EntitiesForms\ChangeEntityForm.cs">
+    <Compile Include="Attributes.cs" />
+    <Compile Include="ChangeEntityForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EntitiesForms\ChangeEntityForm.Designer.cs">
+    <Compile Include="ChangeEntityForm.Designer.cs">
       <DependentUpon>ChangeEntityForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EntitiesForms\EntityFormController.cs" />
-    <Compile Include="EntitiesForms\Exceptions.cs" />
-    <Compile Include="EntitiesForms\FieldsForEdit\DateTimeField.cs">
+    <Compile Include="EntityFormController.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="FieldsForEdit\DateTimeField.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="EntitiesForms\FieldsForEdit\DateTimeField.Designer.cs">
+    <Compile Include="FieldsForEdit\DateTimeField.Designer.cs">
       <DependentUpon>DateTimeField.cs</DependentUpon>
     </Compile>
-    <Compile Include="EntitiesForms\FieldsForEdit\EnumField.cs">
+    <Compile Include="FieldsForEdit\EnumField.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="EntitiesForms\FieldsForEdit\EnumField.Designer.cs">
+    <Compile Include="FieldsForEdit\EnumField.Designer.cs">
       <DependentUpon>EnumField.cs</DependentUpon>
     </Compile>
-    <Compile Include="EntitiesForms\FieldsForEdit\StringAndIntNumbers.cs">
+    <Compile Include="FieldsForEdit\StringAndIntNumbers.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="EntitiesForms\FieldsForEdit\StringAndIntNumbers.Designer.cs">
+    <Compile Include="FieldsForEdit\StringAndIntNumbers.Designer.cs">
       <DependentUpon>StringAndIntNumbers.cs</DependentUpon>
     </Compile>
-    <Compile Include="EntitiesForms\FieldsForEdit\ReferenceField.cs">
+    <Compile Include="FieldsForEdit\ReferenceField.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="EntitiesForms\FieldsForEdit\ReferenceField.Designer.cs">
+    <Compile Include="FieldsForEdit\ReferenceField.Designer.cs">
       <DependentUpon>ReferenceField.cs</DependentUpon>
     </Compile>
-    <Compile Include="EntitiesForms\IQueryableExtension.cs" />
-    <Compile Include="EntitiesForms\ReflEntity.cs" />
-    <Compile Include="EntitiesForms\Utilities.cs" />
-    <Compile Include="Entities\Class.cs" />
-    <Compile Include="Entities\SomeEntity.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="IQueryableExtension.cs" />
+    <Compile Include="ReflEntity.cs" />
+    <Compile Include="Utilities.cs" />
+    <Compile Include="EntityForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EntitiesForms\EntityForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EntitiesForms\EntityForm.Designer.cs">
+    <Compile Include="EntityForm.Designer.cs">
       <DependentUpon>EntityForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202103251542592_v1.cs" />
-    <Compile Include="Migrations\202103251542592_v1.designer.cs">
-      <DependentUpon>202103251542592_v1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="ModelDatabase.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="EntitiesForms\AddEntityForm.resx">
+    <EmbeddedResource Include="AddEntityForm.resx">
       <DependentUpon>AddEntityForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EntitiesForms\ChangeEntityForm.resx">
+    <EmbeddedResource Include="ChangeEntityForm.resx">
       <DependentUpon>ChangeEntityForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EntitiesForms\EntityForm.resx">
+    <EmbeddedResource Include="EntityForm.resx">
       <DependentUpon>EntityForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EntitiesForms\FieldsForEdit\StringAndIntNumbers.resx">
+    <EmbeddedResource Include="FieldsForEdit\StringAndIntNumbers.resx">
       <DependentUpon>StringAndIntNumbers.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103251542592_v1.resx">
-      <DependentUpon>202103251542592_v1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -212,8 +182,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="App.Config" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

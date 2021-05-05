@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Linq.Expressions;
 
-namespace ReflectionForms.EntitiesForms
+namespace ReflectionForms
 {
 	public class EntityFormController
 	{
 		private DbContext Context;
 		private static EntityFormController _instance;
-		public static EntityFormController Instance {
+		public static EntityFormController Instance
+		{
 			get
 			{
 				if (_instance == null)
@@ -23,10 +22,10 @@ namespace ReflectionForms.EntitiesForms
 					return _instance;
 				}
 			}
-			private set 
+			private set
 			{
 				_instance = value;
-			} 
+			}
 		}
 		private EntityFormController(DbContext context)
 		{
@@ -36,7 +35,7 @@ namespace ReflectionForms.EntitiesForms
 		{
 			_instance = new EntityFormController(context);
 		}
-		public EntityForm<TEntity> GetForm<TEntity>(params Privileges[] privileges)  where TEntity : class
+		public EntityForm<TEntity> GetForm<TEntity>(params Privileges[] privileges) where TEntity : class
 		{
 			return new EntityForm<TEntity>(this, privileges);
 		}
@@ -44,7 +43,7 @@ namespace ReflectionForms.EntitiesForms
 		{
 			return Context.Set<TEntity>().AsQueryable().IncludeReferences().ToList();
 		}
-		public List<object> GetAll(Type type) 
+		public List<object> GetAll(Type type)
 		{
 			return Context.Set(type).AsQueryable().IncludeReferences().ToListAsync().Result;
 		}
@@ -61,5 +60,5 @@ namespace ReflectionForms.EntitiesForms
 			Context.SaveChanges();
 		}
 	}
-	
+
 }

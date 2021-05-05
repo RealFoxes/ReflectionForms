@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ReflectionForms.EntitiesForms
+namespace ReflectionForms
 {
 	abstract public class ReflFormAtt : Attribute
 	{
@@ -16,7 +12,7 @@ namespace ReflectionForms.EntitiesForms
 
 		public ReflFormName(string Name) // Возмонжо передавать dictionary с ключем локализации и значением для этого языка 
 		{
-			this.Name = Name;		
+			this.Name = Name;
 		}
 	}
 	public class ReflFormNotVisible : ReflFormAtt

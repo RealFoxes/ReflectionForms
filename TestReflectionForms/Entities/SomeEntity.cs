@@ -1,14 +1,8 @@
-﻿using ReflectionForms.EntitiesForms;
+﻿using ReflectionForms;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ReflectionForms.Entities
+namespace TestReflectionForms.Entities
 {
 	public class SomeEntity : ReflEntity<SomeEntity>
 	{
@@ -19,7 +13,7 @@ namespace ReflectionForms.Entities
 			[ReflFormName("НекийПеречеслитель2")]
 			SomeEnum2
 		}
-		[Key,ReflFormName("Тест")] //Колонка в таблице / Лейбл над тексто боксом или другим контролом
+		[Key, ReflFormName("Тест")] //Колонка в таблице / Лейбл над тексто боксом или другим контролом
 		public int SomeId { get; set; }
 
 		public int SomeProp { get; set; }
@@ -37,7 +31,7 @@ namespace ReflectionForms.Entities
 
 		public SomeEntity()
 		{
-		
+
 		}
 	}
 }

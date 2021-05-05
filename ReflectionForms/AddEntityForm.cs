@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ReflectionForms.EntitiesForms
+namespace ReflectionForms
 {
 	public partial class AddEntityForm<T> : Form where T : class
 	{
@@ -31,7 +23,7 @@ namespace ReflectionForms.EntitiesForms
 			this.DialogResult = DialogResult.OK;
 			Close();
 			MainForm.Announcer.SendMessage("Успешно добавлено"); // Реализовать анонсер
-			
+
 		}
 
 		private void buttonCancel_Click(object sender, EventArgs e)

@@ -1,18 +1,12 @@
-﻿using ReflectionForms.EntitiesForms.FieldsForEdit;
+﻿using ReflectionForms.FieldsForEdit;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ReflectionForms.EntitiesForms
+namespace ReflectionForms
 {
 	public static class Utilities
 	{
@@ -140,34 +134,34 @@ namespace ReflectionForms.EntitiesForms
 		}
 		public static void AddRowToDataSource<T>(T entity, DataTable dt)
 		{
-				DataRow row = dt.NewRow();
-				row[0] = entity;
-				foreach (PropertyInfo property in typeof(T).GetProperties())
+			DataRow row = dt.NewRow();
+			row[0] = entity;
+			foreach (PropertyInfo property in typeof(T).GetProperties())
+			{
+				var columnId = dt.Columns.Cast<DataColumn>()
+					.FirstOrDefault(c => c.ColumnName == Utilities.GetColumnName(property)).Ordinal;
+
+				if (property.PropertyType.IsEnum)
 				{
-					var columnId = dt.Columns.Cast<DataColumn>()
-						.FirstOrDefault(c => c.ColumnName == Utilities.GetColumnName(property)).Ordinal;
+					string nameOfEnum = Utilities.GetValueRef(property, entity).ToString();
+					FieldInfo field = property.PropertyType.GetField(Utilities.GetValueRef(property, entity).ToString());
 
-					if (property.PropertyType.IsEnum)
+					var att = field.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName");
+					if (att != null)
 					{
-						string nameOfEnum = Utilities.GetValueRef(property, entity).ToString();
-						FieldInfo field = property.PropertyType.GetField(Utilities.GetValueRef(property, entity).ToString());
-
-						var att = field.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName");
-						if (att != null)
-						{
-							nameOfEnum = att.ConstructorArguments[0].Value.ToString();
-						}
-
-						row[columnId] = nameOfEnum;
+						nameOfEnum = att.ConstructorArguments[0].Value.ToString();
 					}
-					else
-					{
-						row[columnId] = Utilities.GetValueRef(property, entity);
-					}
+
+					row[columnId] = nameOfEnum;
 				}
-				dt.Rows.Add(row);
+				else
+				{
+					row[columnId] = Utilities.GetValueRef(property, entity);
+				}
+			}
+			dt.Rows.Add(row);
 		}
-		
+
 		public static T GetEntityFromField<T>(Control control)
 		{
 			T entity = (T)Activator.CreateInstance(typeof(T));

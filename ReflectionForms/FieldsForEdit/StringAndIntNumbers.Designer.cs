@@ -1,7 +1,7 @@
 ﻿
-namespace ReflectionForms.EntitiesForms.FieldsForEdit
+namespace ReflectionForms.FieldsForEdit
 {
-	partial class DateTimeField
+	partial class StringAndIntNumbers
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -30,7 +30,7 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 		private void InitializeComponent()
 		{
 			this.label = new System.Windows.Forms.Label();
-			this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
+			this.textBox = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// label
@@ -42,18 +42,18 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 			this.label.TabIndex = 0;
 			this.label.Text = "label1";
 			// 
-			// dateTimePicker
+			// textBox
 			// 
-			this.dateTimePicker.Location = new System.Drawing.Point(0, 16);
-			this.dateTimePicker.Name = "dateTimePicker";
-			this.dateTimePicker.Size = new System.Drawing.Size(147, 20);
-			this.dateTimePicker.TabIndex = 1;
+			this.textBox.Location = new System.Drawing.Point(0, 16);
+			this.textBox.Name = "textBox";
+			this.textBox.Size = new System.Drawing.Size(147, 20);
+			this.textBox.TabIndex = 1;
 			// 
 			// StringAndIntNumbers
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.dateTimePicker);
+			this.Controls.Add(this.textBox);
 			this.Controls.Add(this.label);
 			this.Name = "";
 			this.Size = new System.Drawing.Size(150, 40);
@@ -65,6 +65,6 @@ namespace ReflectionForms.EntitiesForms.FieldsForEdit
 		#endregion
 
 		private System.Windows.Forms.Label label;
-		private System.Windows.Forms.DateTimePicker dateTimePicker;
+		private System.Windows.Forms.TextBox textBox;
 	}
 }

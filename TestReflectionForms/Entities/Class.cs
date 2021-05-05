@@ -1,13 +1,8 @@
-﻿using ReflectionForms.EntitiesForms;
-using System;
+﻿using ReflectionForms;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ReflectionForms.Entities
+namespace TestReflectionForms.Entities
 {
 	public class Class : ReflEntity<Class>
 	{

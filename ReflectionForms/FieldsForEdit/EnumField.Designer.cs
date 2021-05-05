@@ -1,5 +1,5 @@
 ﻿
-namespace ReflectionForms.EntitiesForms.FieldsForEdit
+namespace ReflectionForms.FieldsForEdit
 {
 	partial class EnumField
 	{

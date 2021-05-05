@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ReflectionForms.EntitiesForms
+namespace ReflectionForms
 {
-	public partial class ChangeEntityForm <T> : Form where T : class
+	public partial class ChangeEntityForm<T> : Form where T : class
 	{
 		private EntityForm<T> MainForm { get; set; }
 		private DataGridViewRow Row { get; set; }
@@ -40,7 +33,7 @@ namespace ReflectionForms.EntitiesForms
 					}
 				}
 			}
-			
+
 			EntityFormController.Instance.Save();
 
 			MainForm.Dt.Rows.Remove(((DataRowView)Row.DataBoundItem).Row); // remove row from local table
