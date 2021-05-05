@@ -152,7 +152,6 @@
       <DependentUpon>ReferenceField.cs</DependentUpon>
     </Compile>
     <Compile Include="IQueryableExtension.cs" />
-    <Compile Include="ReflEntity.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="EntityForm.cs">
       <SubType>Form</SubType>

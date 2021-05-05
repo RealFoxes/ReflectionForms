@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TestReflectionForms.Entities
 {
-	public class SomeEntity : ReflEntity<SomeEntity>
+	public class SomeEntity
 	{
 		public enum SomeEnum
 		{

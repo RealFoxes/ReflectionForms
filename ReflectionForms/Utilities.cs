@@ -100,7 +100,7 @@ namespace ReflectionForms
 				var NameOfProp = uc.Tag.ToString();
 				NameOfProp = NameOfProp.Remove(0, NameOfProp.LastIndexOf('.') + 1);
 				PropertyInfo prop = entity.GetType().GetProperties().FirstOrDefault(p => p.Name == NameOfProp);
-				foreach (Control itemOfField in uc.Controls) // Переписать это условие, а именно добавить инстанс листа из вне что бы сохранялись ссылки и не приходилось искать в новом листе по проперти
+				foreach (Control itemOfField in uc.Controls)
 				{
 
 					if (itemOfField is Label) continue;

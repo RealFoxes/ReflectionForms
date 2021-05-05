@@ -18,11 +18,10 @@ namespace ReflectionForms
 			T entity = Utilities.GetEntityFromField<T>(panel);
 			EntityFormController.Instance.Add(entity);
 			EntityFormController.Instance.Save();
-			//MainForm.AddMethod.Invoke(null, new object[] { entity });
 			Utilities.AddRowToDataSource(entity, MainForm.Dt);
 			this.DialogResult = DialogResult.OK;
 			Close();
-			MainForm.Announcer.SendMessage("Успешно добавлено"); // Реализовать анонсер
+			MainForm.Announcer.SendMessage("Успешно добавлено");
 
 		}
 

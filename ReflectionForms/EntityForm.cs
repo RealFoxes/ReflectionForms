@@ -81,7 +81,6 @@ namespace ReflectionForms
 			}
 
 			//Filling body
-			//List<T> entities = (List<T>)typeof(T).GetMethod("GetEntities").Invoke(null,null);
 			var entities = EntityFormController.Instance.GetAll<T>();
 
 
@@ -160,7 +159,6 @@ namespace ReflectionForms
 				T entity = (T)dataGridView.SelectedRows[0].Cells[0].Value;
 				EntityFormController.Instance.Remove(entity);
 				EntityFormController.Instance.Save();
-				//DeleteMethod.Invoke(null, new object[] { entity }); //Call delete method from entity class 
 				dataGridView.Rows.RemoveAt(dataGridView.SelectedRows[0].Index);
 				Announcer.SendMessage("Успешно удаленно");
 
@@ -171,18 +169,14 @@ namespace ReflectionForms
 
 		private void EntityForm_DoubleClick(object sender, EventArgs e)
 		{
-			UpdateTable();//!!!!!!!!!!!!!!!!!!!!
+			UpdateTable();//!!!!DEBUG FUNCTION!!!!
 		}
 
 		private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
-			//????
-			//e.RowIndex.ToString();
-			//Реализовать добавление в строки инфы
-			//foreach (Control item in panel.Controls)
-			//{
-			//	Console.WriteLine(item.Tag);
-			//}
+			
+			e.RowIndex.ToString();
+			Utilities.FillFields(panel, Dt.Rows[e.RowIndex][0]);
 		}
 
 

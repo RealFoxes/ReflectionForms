@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TestReflectionForms.Entities
 {
-	public class Class : ReflEntity<Class>
+	public class Class
 	{
 		[Key, ReflFormName("ЫД")]
 		public int Id { get; set; }
