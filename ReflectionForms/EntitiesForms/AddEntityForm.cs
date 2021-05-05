@@ -23,46 +23,14 @@ namespace ReflectionForms.EntitiesForms
 
 		private void buttonAdd_Click(object sender, EventArgs e)
 		{
-			T entity = (T)Activator.CreateInstance(typeof(T));
-			foreach (Control uc in panel.Controls)
-			{
-				var NameOfProp = uc.Tag.ToString();
-				NameOfProp = NameOfProp.Remove(0, NameOfProp.LastIndexOf('.') + 1);
-				PropertyInfo prop = entity.GetType().GetProperties().FirstOrDefault(p => p.Name == NameOfProp);
-				var converter = TypeDescriptor.GetConverter(prop.PropertyType);
-				foreach (Control control in uc.Controls)
-				{
-					if (control is Label) continue;
-
-					if (control is DateTimePicker dateTimePicker)
-					{
-
-						prop.SetValue(entity, dateTimePicker.Value, null);
-						continue;
-					}
-					if(prop.IsReference(out CustomAttributeData att))
-					{
-						prop.SetValue(entity, ((ComboBox)control).SelectedItem, null);
-						continue;
-					}
-					if (prop.PropertyType.IsEnum)
-					{
-						var _enum = Enum.Parse(prop.PropertyType, ((ComboBox)control).SelectedIndex.ToString());
-						prop.SetValue(entity, _enum);
-						continue;
-					}
-					
-					
-					prop.SetValue(entity, converter.ConvertTo(control.Text, prop.PropertyType), null);
-
-				}
-
-			}
-			MainForm.AddMethod.Invoke(null, new object[] { entity });
-			Utilities.AddRowToDataSource(entity, MainForm.dt);
+			T entity = Utilities.GetEntityFromField<T>(panel);
+			EntityFormController.Instance.Add(entity);
+			EntityFormController.Instance.Save();
+			//MainForm.AddMethod.Invoke(null, new object[] { entity });
+			Utilities.AddRowToDataSource(entity, MainForm.Dt);
 			this.DialogResult = DialogResult.OK;
 			Close();
-			MainForm.announcer.SendMessage("Успешно добавлено"); // Реализовать анонсер
+			MainForm.Announcer.SendMessage("Успешно добавлено"); // Реализовать анонсер
 			
 		}
 

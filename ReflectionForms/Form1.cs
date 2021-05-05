@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using ReflectionForms.Entities;
+using ReflectionForms.EntitiesForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,7 +19,10 @@ namespace ReflectionForms
 		public static ModelDatabase model = new ModelDatabase();
 		public Form1()
 		{
-			EntityForm<SomeEntity> entityForm = new EntityForm<SomeEntity>(Privileges.Add,Privileges.Remove,Privileges.Edit);
+			EntityFormController.Initialize(model);
+
+			var entityForm = EntityFormController.Instance.GetForm<SomeEntity>(Privileges.Add, Privileges.Remove, Privileges.Edit);
+
 			entityForm.Show();
 			InitializeComponent();
 		}

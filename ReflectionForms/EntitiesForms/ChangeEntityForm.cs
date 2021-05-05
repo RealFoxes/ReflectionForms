@@ -15,10 +15,12 @@ namespace ReflectionForms.EntitiesForms
 	{
 		private EntityForm<T> MainForm { get; set; }
 		private DataGridViewRow Row { get; set; }
+		private T Entity { get; set; }
 		public ChangeEntityForm(EntityForm<T> mainForm, DataGridViewRow row)
 		{
 			this.MainForm = mainForm;
 			this.Row = row;
+			this.Entity = (T)row.Cells[0].Value;
 			InitializeComponent();
 			Utilities.AddFields<T>(panel);
 			Utilities.FillFields(panel, row.Cells[0].Value);
@@ -26,46 +28,23 @@ namespace ReflectionForms.EntitiesForms
 
 		private void buttonChange_Click(object sender, EventArgs e)
 		{
-			T newEntity = (T)Activator.CreateInstance(typeof(T));
-			foreach (Control uc in panel.Controls)
+			T newEntity = Utilities.GetEntityFromField<T>(panel);
+
+			foreach (var prop in Entity.GetType().GetProperties())
 			{
-				var NameOfProp = uc.Tag.ToString();
-				NameOfProp = NameOfProp.Remove(0, NameOfProp.LastIndexOf('.') + 1);
-				PropertyInfo prop = newEntity.GetType().GetProperties().FirstOrDefault(p => p.Name == NameOfProp);
-				var converter = TypeDescriptor.GetConverter(prop.PropertyType);
-				foreach (Control control in uc.Controls)
+				foreach (var newProp in newEntity.GetType().GetProperties())
 				{
-					if (control is Label) continue;
-
-					if (control is DateTimePicker dateTimePicker)
+					if (prop.Name == newProp.Name)
 					{
-
-						prop.SetValue(newEntity, dateTimePicker.Value, null);
-						continue;
+						prop.SetValue(Entity, newProp.GetValue(newEntity));
 					}
-					if (prop.IsReference(out CustomAttributeData att))
-					{
-						prop.SetValue(newEntity, ((ComboBox)control).SelectedItem, null);
-						continue;
-					}
-					if (prop.PropertyType.IsEnum)
-					{
-						var _enum = Enum.Parse(prop.PropertyType, ((ComboBox)control).SelectedIndex.ToString());
-						prop.SetValue(newEntity, _enum);
-						continue;
-					}
-
-
-					prop.SetValue(newEntity, converter.ConvertTo(control.Text, prop.PropertyType), null);
-
 				}
-
 			}
+			
+			EntityFormController.Instance.Save();
 
-			MainForm.EditMethod.Invoke(null, new object[] { Row.Cells[0].Value, newEntity});
-
-			MainForm.dt.Rows.Remove(((DataRowView)Row.DataBoundItem).Row); // remove row from local table
-			Utilities.AddRowToDataSource(newEntity, MainForm.dt);
+			MainForm.Dt.Rows.Remove(((DataRowView)Row.DataBoundItem).Row); // remove row from local table
+			Utilities.AddRowToDataSource(newEntity, MainForm.Dt);
 
 			this.DialogResult = DialogResult.OK;
 			Close();

@@ -23,28 +23,16 @@ namespace ReflectionForms
 	}
 	public partial class EntityForm<T> : Form where T : class
 	{
-		public MethodInfo DeleteMethod, EditMethod, AddMethod, GetEntities;
-		public DataTable dt;
-		public AnnouncerControler announcer;
-		public EntityForm(params Privileges[] privileges) // Добавить реализацию прав скорее всего с помощью енамов / Добавить формы / Еще раз подумать над реализацией получаение всех инстансов из базы
+		public DataTable Dt;
+		public AnnouncerControler Announcer;
+		public EntityForm(EntityFormController controller, Privileges[] privileges) // Добавить реализацию прав скорее всего с помощью енамов / Добавить формы / Еще раз подумать над реализацией получаение всех инстансов из базы
 		{
 			InitializeComponent();
-			announcer = new AnnouncerControler(panelAnnounce, 5);
+			Announcer = new AnnouncerControler(panelAnnounce, 5);
 
-			#region Adding methods and turn on visible buttons if exist required permiss
-
-			GetEntities = typeof(T).GetMethod("GetEntities");
-			if (typeof(T).GetMethod("GetEntities") == null) throw new MethodGetEntitiesIsNotImplementedException();
-
-			EditMethod = typeof(T).GetMethod("EditEntity");
-			DeleteMethod = typeof(T).GetMethod("DeleteEntity");
-			AddMethod = typeof(T).GetMethod("AddEntity");
-
-			#endregion
-
-			buttonAdd.Visible = AddMethod != null && privileges.Contains(Privileges.Add);
-			buttonDelete.Visible = DeleteMethod != null && privileges.Contains(Privileges.Remove);
-			buttonChange.Visible = EditMethod != null && privileges.Contains(Privileges.Edit);
+			buttonAdd.Visible = privileges.Contains(Privileges.Add);
+			buttonDelete.Visible = privileges.Contains(Privileges.Remove);
+			buttonChange.Visible = privileges.Contains(Privileges.Edit);
 
 			UpdateTable();
 			Utilities.AddFields<T>(panel);
@@ -57,13 +45,13 @@ namespace ReflectionForms
 		}
 		public void UpdateTable()
 		{
-			dt = new DataTable();
+			Dt = new DataTable();
 			//Creting header 
 
 			bool[] IndexesToHide = new bool[typeof(T).GetProperties().Length+1]; // Recording column which need to hide
 			int iToHide = 0;
 
-			dt.Columns.Add(new DataColumn("Entity", typeof(T)));
+			Dt.Columns.Add(new DataColumn("Entity", typeof(T)));
 			IndexesToHide[iToHide++] = true; // Hide first column with instance entity
 
 			foreach (PropertyInfo property in typeof(T).GetProperties())
@@ -96,19 +84,20 @@ namespace ReflectionForms
 				}
 				iToHide++;
 				if (property.PropertyType.IsEnum) columnType = typeof(string);
-				dt.Columns.Add(new DataColumn(columnName, columnType));
+				Dt.Columns.Add(new DataColumn(columnName, columnType));
 			}
 
 			//Filling body
-			List<T> entities = (List<T>)typeof(T).GetMethod("GetEntities").Invoke(null,null);
+			//List<T> entities = (List<T>)typeof(T).GetMethod("GetEntities").Invoke(null,null);
+			var entities = EntityFormController.Instance.GetAll<T>();
 
-			for (int i = 0; i < entities.Count; i++)
+
+			foreach (var entity in entities)
 			{
-				T entity = entities[i];
-
-				Utilities.AddRowToDataSource(entity, dt);
+				Utilities.AddRowToDataSource(entity, Dt);
 			}
-			dataGridView.DataSource = dt;
+				
+			dataGridView.DataSource = Dt;
 
 			//Hide column with att and entity
 			iToHide = 0;
@@ -127,11 +116,11 @@ namespace ReflectionForms
 			ChangeEntityForm<T> changeEntityForm = new ChangeEntityForm<T>(this, row);
 			if(changeEntityForm.ShowDialog() == DialogResult.OK)
 			{
-				announcer.SendMessage("Успешно изменено");
+				Announcer.SendMessage("Успешно изменено");
 			}
 			else
 			{
-				announcer.SendMessage("Отмена изменения");
+				Announcer.SendMessage("Отмена изменения");
 			}
 		}
 
@@ -140,11 +129,11 @@ namespace ReflectionForms
 			AddEntityForm<T> addEntityForm = new AddEntityForm<T>(this);
 			if (addEntityForm.ShowDialog() == DialogResult.OK)
 			{
-				announcer.SendMessage("Успешно добавлено");
+				Announcer.SendMessage("Успешно добавлено");
 			}
 			else
 			{
-				announcer.SendMessage("Отмена добавления");
+				Announcer.SendMessage("Отмена добавления");
 			}
 		}
 
@@ -153,7 +142,7 @@ namespace ReflectionForms
 
 			if (comboBoxSearch.Text == "")
 			{
-				announcer.SendMessage("Выберите колонку");
+				Announcer.SendMessage("Выберите колонку");
 			}
 			else
 			{
@@ -175,10 +164,12 @@ namespace ReflectionForms
 
 			if (MessageBox.Show("Вы уверены что ходите удалить выбранный элемент?", "Потверждение удаления", MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				object entity = dataGridView.SelectedRows[0].Cells[0].Value;
-				DeleteMethod.Invoke(null, new object[] { entity }); //Call delete method from entity class 
+				T entity = (T)dataGridView.SelectedRows[0].Cells[0].Value;
+				EntityFormController.Instance.Remove(entity);
+				EntityFormController.Instance.Save();
+				//DeleteMethod.Invoke(null, new object[] { entity }); //Call delete method from entity class 
 				dataGridView.Rows.RemoveAt(dataGridView.SelectedRows[0].Index);
-				announcer.SendMessage("Успешно удаленно");
+				Announcer.SendMessage("Успешно удаленно");
 
 
 

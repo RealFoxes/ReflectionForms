@@ -134,6 +134,7 @@
     <Compile Include="EntitiesForms\ChangeEntityForm.Designer.cs">
       <DependentUpon>ChangeEntityForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EntitiesForms\EntityFormController.cs" />
     <Compile Include="EntitiesForms\Exceptions.cs" />
     <Compile Include="EntitiesForms\FieldsForEdit\DateTimeField.cs">
       <SubType>UserControl</SubType>
@@ -159,6 +160,7 @@
     <Compile Include="EntitiesForms\FieldsForEdit\ReferenceField.Designer.cs">
       <DependentUpon>ReferenceField.cs</DependentUpon>
     </Compile>
+    <Compile Include="EntitiesForms\IQueryableExtension.cs" />
     <Compile Include="EntitiesForms\ReflEntity.cs" />
     <Compile Include="EntitiesForms\Utilities.cs" />
     <Compile Include="Entities\Class.cs" />

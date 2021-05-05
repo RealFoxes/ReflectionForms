@@ -14,6 +14,7 @@ namespace ReflectionForms.Entities
 		[Key, ReflFormName("ЫД")]
 		public int Id { get; set; }
 
+		[ReflFormName("Свойство")]
 		public int MyProperty { get; set; }
 
 		public List<SomeEntity> SomeEntities { get; set; }
@@ -21,11 +22,6 @@ namespace ReflectionForms.Entities
 		public Class()
 		{
 			SomeEntities = new List<SomeEntity>();
-		}
-		public new static IEnumerable<Class> GetEntities()
-		{
-			var model = Form1.model;
-			return model.Classes.Include(cl => cl.SomeEntities.Select(s => s.SomeRef)).ToList();
 		}
 	}
 }

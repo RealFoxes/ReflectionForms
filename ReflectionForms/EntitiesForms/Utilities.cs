@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -36,7 +38,7 @@ namespace ReflectionForms.EntitiesForms
 
 			return columnName;
 		}
-		public static object GetValue<Entity>(PropertyInfo property, Entity entity)
+		public static object GetValueRef<Entity>(PropertyInfo property, Entity entity)
 		{
 			object value;
 
@@ -55,7 +57,6 @@ namespace ReflectionForms.EntitiesForms
 		}
 		public static void AddFields<T>(Control control)
 		{
-
 			foreach (PropertyInfo property in typeof(T).GetProperties().Reverse())
 			{
 				var propType = property.PropertyType;
@@ -75,7 +76,7 @@ namespace ReflectionForms.EntitiesForms
 						uc.BringToFront();
 						control.Controls.Add(uc);
 					}
-					else if (property.IsReference(out CustomAttributeData att))
+					else if (property.IsReference(out _))
 					{
 						var uc = new ReferenceField(property);
 						uc.Dock = DockStyle.Top;
@@ -114,25 +115,10 @@ namespace ReflectionForms.EntitiesForms
 						dateTimePicker.Value = (DateTime)prop.GetValue(entity);
 						continue;
 					}
-					if (prop.IsReference(out CustomAttributeData att)) // If prop is a reference
+					if (prop.IsReference(out _)) // If prop is a reference
 					{
 						ComboBox comboBox = (ComboBox)itemOfField;
-						var ListOfEntities = comboBox.Items.Cast<object>();
-
-						object valueFromEntity = GetValue(prop, entity);
-						object valToShow = null;
-						foreach (object entityFromComboBox in ListOfEntities)
-						{
-							var valueFromPropertyFromRef = entityFromComboBox.GetType()
-							 .GetProperties()
-							 .FirstOrDefault(p => p.Name == att.ConstructorArguments[0].Value.ToString()).GetValue(entityFromComboBox);
-
-							if (valueFromPropertyFromRef.Equals(valueFromEntity))
-							{
-								valToShow = entityFromComboBox;
-							}
-						}
-						comboBox.SelectedItem = valToShow;
+						comboBox.SelectedItem = prop.GetValue(entity);
 						continue;
 					}
 					if (prop.PropertyType.IsEnum)
@@ -158,25 +144,69 @@ namespace ReflectionForms.EntitiesForms
 				row[0] = entity;
 				foreach (PropertyInfo property in typeof(T).GetProperties())
 				{
-					var columnId = dt.Columns.Cast<DataColumn>().FirstOrDefault(c => c.ColumnName == Utilities.GetColumnName(property)).Ordinal;
+					var columnId = dt.Columns.Cast<DataColumn>()
+						.FirstOrDefault(c => c.ColumnName == Utilities.GetColumnName(property)).Ordinal;
+
 					if (property.PropertyType.IsEnum)
 					{
-						string nameOfEnum = Utilities.GetValue(property, entity).ToString();
-						FieldInfo field = property.PropertyType.GetField(Utilities.GetValue(property, entity).ToString());
+						string nameOfEnum = Utilities.GetValueRef(property, entity).ToString();
+						FieldInfo field = property.PropertyType.GetField(Utilities.GetValueRef(property, entity).ToString());
 
 						var att = field.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormName");
 						if (att != null)
 						{
 							nameOfEnum = att.ConstructorArguments[0].Value.ToString();
 						}
+
 						row[columnId] = nameOfEnum;
 					}
 					else
 					{
-						row[columnId] = Utilities.GetValue(property, entity);
+						row[columnId] = Utilities.GetValueRef(property, entity);
 					}
 				}
 				dt.Rows.Add(row);
+		}
+		
+		public static T GetEntityFromField<T>(Control control)
+		{
+			T entity = (T)Activator.CreateInstance(typeof(T));
+			foreach (Control uc in control.Controls)
+			{
+				var NameOfProp = uc.Tag.ToString();
+				NameOfProp = NameOfProp.Remove(0, NameOfProp.LastIndexOf('.') + 1);
+				PropertyInfo prop = entity.GetType().GetProperties().FirstOrDefault(p => p.Name == NameOfProp);
+				var converter = TypeDescriptor.GetConverter(prop.PropertyType);
+
+				foreach (Control ucControl in uc.Controls)
+				{
+					if (ucControl is Label) continue;
+
+					if (ucControl is DateTimePicker dateTimePicker)
+					{
+
+						prop.SetValue(entity, dateTimePicker.Value, null);
+						continue;
+					}
+
+					if (prop.IsReference(out _))
+					{
+						prop.SetValue(entity, ((ComboBox)ucControl).SelectedItem, null);
+						continue;
+					}
+
+					if (prop.PropertyType.IsEnum)
+					{
+						var _enum = Enum.Parse(prop.PropertyType, ((ComboBox)ucControl).SelectedIndex.ToString());
+						prop.SetValue(entity, _enum);
+						continue;
+					}
+
+					prop.SetValue(entity, converter.ConvertTo(ucControl.Text, prop.PropertyType), null);
+				}
+
+			}
+			return entity;
 		}
 	}
 }
