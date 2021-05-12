@@ -1,7 +1,7 @@
 ﻿
-namespace ReflectionForms.FieldsForEdit
+namespace ReflectionForms.Fields
 {
-	partial class EnumField
+	partial class ReferenceField
 	{
 		/// <summary> 
 		/// Required designer variable.

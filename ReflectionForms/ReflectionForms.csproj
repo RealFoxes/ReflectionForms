@@ -126,30 +126,37 @@
       <DependentUpon>ChangeEntityForm.cs</DependentUpon>
     </Compile>
     <Compile Include="EntityFormController.cs" />
-    <Compile Include="Exceptions.cs" />
-    <Compile Include="FieldsForEdit\DateTimeField.cs">
+    <Compile Include="Fields\FieldsController.cs" />
+    <Compile Include="Fields\DateTimeField.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FieldsForEdit\DateTimeField.Designer.cs">
+    <Compile Include="Fields\DateTimeField.Designer.cs">
       <DependentUpon>DateTimeField.cs</DependentUpon>
     </Compile>
-    <Compile Include="FieldsForEdit\EnumField.cs">
+    <Compile Include="Fields\EnumField.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FieldsForEdit\EnumField.Designer.cs">
+    <Compile Include="Fields\EnumField.Designer.cs">
       <DependentUpon>EnumField.cs</DependentUpon>
     </Compile>
-    <Compile Include="FieldsForEdit\StringAndIntNumbers.cs">
+    <Compile Include="Fields\IField.cs" />
+    <Compile Include="Fields\ReferenceField.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FieldsForEdit\StringAndIntNumbers.Designer.cs">
-      <DependentUpon>StringAndIntNumbers.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FieldsForEdit\ReferenceField.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="FieldsForEdit\ReferenceField.Designer.cs">
+    <Compile Include="Fields\ReferenceField.Designer.cs">
       <DependentUpon>ReferenceField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Fields\IntField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Fields\IntField.Designer.cs">
+      <DependentUpon>IntField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Fields\StringField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Fields\StringField.Designer.cs">
+      <DependentUpon>StringField.cs</DependentUpon>
     </Compile>
     <Compile Include="IQueryableExtension.cs" />
     <Compile Include="Utilities.cs" />
@@ -169,8 +176,8 @@
     <EmbeddedResource Include="EntityForm.resx">
       <DependentUpon>EntityForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FieldsForEdit\StringAndIntNumbers.resx">
-      <DependentUpon>StringAndIntNumbers.cs</DependentUpon>
+    <EmbeddedResource Include="Fields\IntField.resx">
+      <DependentUpon>IntField.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

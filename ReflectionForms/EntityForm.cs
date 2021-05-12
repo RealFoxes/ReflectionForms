@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReflectionForms.Fields;
+using System;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -28,8 +29,8 @@ namespace ReflectionForms
 			buttonChange.Visible = privileges.Contains(Privileges.Edit);
 
 			UpdateTable();
-			Utilities.AddFields<T>(panel);
 
+			FieldsController.AddFields<T>(panel);
 
 			foreach (var item in typeof(T).GetProperties())
 			{
@@ -153,7 +154,6 @@ namespace ReflectionForms
 
 		private void buttonDelete_Click(object sender, EventArgs e)
 		{
-
 			if (MessageBox.Show("Вы уверены что ходите удалить выбранный элемент?", "Потверждение удаления", MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				T entity = (T)dataGridView.SelectedRows[0].Cells[0].Value;
@@ -161,9 +161,10 @@ namespace ReflectionForms
 				EntityFormController.Instance.Save();
 				dataGridView.Rows.RemoveAt(dataGridView.SelectedRows[0].Index);
 				Announcer.SendMessage("Успешно удаленно");
-
-
-
+			}
+			else
+			{
+				Announcer.SendMessage("Отмена удаления");
 			}
 		}
 
@@ -174,9 +175,8 @@ namespace ReflectionForms
 
 		private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
-			
 			e.RowIndex.ToString();
-			Utilities.FillFields(panel, Dt.Rows[e.RowIndex][0]);
+			FieldsController.FillFields(panel, Dt.Rows[e.RowIndex][0]);
 		}
 
 

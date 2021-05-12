@@ -1,16 +1,13 @@
-﻿using ReflectionForms.FieldsForEdit;
+﻿using ReflectionForms.Fields;
 using System;
-using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
 
 namespace ReflectionForms
 {
 	public static class Utilities
 	{
-		private static Type[] TextBoxFieldTypes = { typeof(string), typeof(Int16), typeof(Int32), typeof(Int64), typeof(byte), typeof(char) };
 		public static string GetColumnName(PropertyInfo property)
 		{
 			string columnName;
@@ -49,84 +46,6 @@ namespace ReflectionForms
 			}
 			return value;
 		}
-		public static void AddFields<T>(Control control)
-		{
-			foreach (PropertyInfo property in typeof(T).GetProperties().Reverse())
-			{
-				var propType = property.PropertyType;
-				if (property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormNotVisible") == null)
-				{
-					if (TextBoxFieldTypes.Contains(propType))
-					{
-						var uc = new StringAndIntNumbers(property);
-						uc.Dock = DockStyle.Top;
-						uc.BringToFront();
-						control.Controls.Add(uc);
-					}
-					else if (propType == typeof(DateTime))
-					{
-						var uc = new DateTimeField(property);
-						uc.Dock = DockStyle.Top;
-						uc.BringToFront();
-						control.Controls.Add(uc);
-					}
-					else if (property.IsReference(out _))
-					{
-						var uc = new ReferenceField(property);
-						uc.Dock = DockStyle.Top;
-						uc.BringToFront();
-						control.Controls.Add(uc);
-					}
-					else if (propType.GetTypeInfo().IsEnum)
-					{
-						var uc = new EnumField(property);
-						uc.Dock = DockStyle.Top;
-						uc.BringToFront();
-						control.Controls.Add(uc);
-					}
-
-				}
-			}
-		}
-		public static void FillFields<T>(Control control, T entity)
-		{
-			if (!control.HasChildren) throw new ContorlHasNoChildren();
-
-			foreach (Control uc in control.Controls)
-			{
-				if (!uc.HasChildren) throw new ContorlHasNoChildren();
-
-				//Get currect prop for a UserControl
-				var NameOfProp = uc.Tag.ToString();
-				NameOfProp = NameOfProp.Remove(0, NameOfProp.LastIndexOf('.') + 1);
-				PropertyInfo prop = entity.GetType().GetProperties().FirstOrDefault(p => p.Name == NameOfProp);
-				foreach (Control itemOfField in uc.Controls)
-				{
-
-					if (itemOfField is Label) continue;
-					if (itemOfField is DateTimePicker dateTimePicker)
-					{
-						dateTimePicker.Value = (DateTime)prop.GetValue(entity);
-						continue;
-					}
-					if (prop.IsReference(out _)) // If prop is a reference
-					{
-						ComboBox comboBox = (ComboBox)itemOfField;
-						comboBox.SelectedItem = prop.GetValue(entity);
-						continue;
-					}
-					if (prop.PropertyType.IsEnum)
-					{
-						((ComboBox)itemOfField).SelectedIndex = (int)prop.GetValue(entity);
-						continue;
-					}
-
-
-					itemOfField.Text = prop.GetValue(entity).ToString();
-				}
-			}
-		}
-
 		public static bool IsReference(this PropertyInfo property, out CustomAttributeData attributeData)
 		{
 			attributeData = property.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "ReflFormRef");
@@ -161,46 +80,13 @@ namespace ReflectionForms
 			}
 			dt.Rows.Add(row);
 		}
-
-		public static T GetEntityFromField<T>(Control control)
+		public static void InitializeDefalutFields()
 		{
-			T entity = (T)Activator.CreateInstance(typeof(T));
-			foreach (Control uc in control.Controls)
-			{
-				var NameOfProp = uc.Tag.ToString();
-				NameOfProp = NameOfProp.Remove(0, NameOfProp.LastIndexOf('.') + 1);
-				PropertyInfo prop = entity.GetType().GetProperties().FirstOrDefault(p => p.Name == NameOfProp);
-				var converter = TypeDescriptor.GetConverter(prop.PropertyType);
-
-				foreach (Control ucControl in uc.Controls)
-				{
-					if (ucControl is Label) continue;
-
-					if (ucControl is DateTimePicker dateTimePicker)
-					{
-
-						prop.SetValue(entity, dateTimePicker.Value, null);
-						continue;
-					}
-
-					if (prop.IsReference(out _))
-					{
-						prop.SetValue(entity, ((ComboBox)ucControl).SelectedItem, null);
-						continue;
-					}
-
-					if (prop.PropertyType.IsEnum)
-					{
-						var _enum = Enum.Parse(prop.PropertyType, ((ComboBox)ucControl).SelectedIndex.ToString());
-						prop.SetValue(entity, _enum);
-						continue;
-					}
-
-					prop.SetValue(entity, converter.ConvertTo(ucControl.Text, prop.PropertyType), null);
-				}
-
-			}
-			return entity;
+			FieldsController.AddNewTypeField(typeof(DateTime), typeof(DateTimeField));
+			FieldsController.AddNewTypeField(typeof(String), typeof(StringField));
+			FieldsController.AddNewTypeField(typeof(Int32), typeof(IntField));
+			FieldsController.AddNewTypeField(typeof(Enum), typeof(EnumField));
+			FieldsController.AddNewTypeField(typeof(ReflFormRef), typeof(ReferenceField));
 		}
 	}
 }

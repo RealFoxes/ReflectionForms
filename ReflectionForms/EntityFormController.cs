@@ -34,6 +34,7 @@ namespace ReflectionForms
 		public static void Initialize(DbContext context)
 		{
 			_instance = new EntityFormController(context);
+			Utilities.InitializeDefalutFields();
 		}
 		public EntityForm<TEntity> GetForm<TEntity>(params Privileges[] privileges) where TEntity : class
 		{

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReflectionForms.Fields;
+using System;
 using System.Data;
 using System.Windows.Forms;
 
@@ -15,13 +16,13 @@ namespace ReflectionForms
 			this.Row = row;
 			this.Entity = (T)row.Cells[0].Value;
 			InitializeComponent();
-			Utilities.AddFields<T>(panel);
-			Utilities.FillFields(panel, row.Cells[0].Value);
+			FieldsController.AddFields<T>(panel);
+			FieldsController.FillFields(panel, row.Cells[0].Value);
 		}
 
 		private void buttonChange_Click(object sender, EventArgs e)
 		{
-			T newEntity = Utilities.GetEntityFromField<T>(panel);
+			T newEntity = FieldsController.GetEntityFromFields<T>(panel);
 
 			foreach (var prop in Entity.GetType().GetProperties())
 			{

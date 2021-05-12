@@ -1,5 +1,5 @@
 ﻿
-namespace ReflectionForms.FieldsForEdit
+namespace ReflectionForms.Fields
 {
 	partial class DateTimeField
 	{

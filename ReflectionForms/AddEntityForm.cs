@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReflectionForms.Fields;
+using System;
 using System.Windows.Forms;
 
 namespace ReflectionForms
@@ -10,12 +11,12 @@ namespace ReflectionForms
 		{
 			this.MainForm = mainForm;
 			InitializeComponent();
-			Utilities.AddFields<T>(panel);
+			FieldsController.AddFields<T>(panel);
 		}
 
 		private void buttonAdd_Click(object sender, EventArgs e)
 		{
-			T entity = Utilities.GetEntityFromField<T>(panel);
+			T entity = FieldsController.GetEntityFromFields<T>(panel);
 			EntityFormController.Instance.Add(entity);
 			EntityFormController.Instance.Save();
 			Utilities.AddRowToDataSource(entity, MainForm.Dt);
