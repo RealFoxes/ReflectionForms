@@ -17,9 +17,9 @@ namespace ReflectionForms
 	}
 	public partial class EntityForm<T> : Form where T : class
 	{
-		public DataTable Dt;
+		public DataTable Dt = new DataTable();
 		public AnnouncerControler Announcer;
-		public EntityForm(EntityFormController controller, Privileges[] privileges) // Добавить реализацию прав скорее всего с помощью енамов / Добавить формы / Еще раз подумать над реализацией получаение всех инстансов из базы
+		public EntityForm(Privileges[] privileges) // Добавить реализацию прав скорее всего с помощью енамов / Добавить формы / Еще раз подумать над реализацией получаение всех инстансов из базы
 		{
 			InitializeComponent();
 			Announcer = new AnnouncerControler(panelAnnounce, 5);
@@ -27,7 +27,7 @@ namespace ReflectionForms
 			buttonAdd.Visible = privileges.Contains(Privileges.Add);
 			buttonDelete.Visible = privileges.Contains(Privileges.Remove);
 			buttonChange.Visible = privileges.Contains(Privileges.Edit);
-
+			dataGridView.DataSource = Dt;
 			UpdateTable();
 
 			FieldsController.AddFields<T>(panel);
@@ -39,7 +39,6 @@ namespace ReflectionForms
 		}
 		public void UpdateTable()
 		{
-			Dt = new DataTable();
 			//Creting header 
 
 			bool[] IndexesToHide = new bool[typeof(T).GetProperties().Length + 1]; // Recording column which need to hide
@@ -54,7 +53,6 @@ namespace ReflectionForms
 				string columnName = property.Name;
 				foreach (CustomAttributeData att in property.CustomAttributes)
 				{
-
 					switch (att.AttributeType.Name) // Возможно посмотреть другие реализации менее костыльные с указанием конкретного атрибута, а не его наим.
 					{
 						case "ReflFormName":
@@ -89,8 +87,6 @@ namespace ReflectionForms
 			{
 				Utilities.AddRowToDataSource(entity, Dt);
 			}
-
-			dataGridView.DataSource = Dt;
 
 			//Hide column with att and entity
 			iToHide = 0;
@@ -178,7 +174,5 @@ namespace ReflectionForms
 			e.RowIndex.ToString();
 			FieldsController.FillFields(panel, Dt.Rows[e.RowIndex][0]);
 		}
-
-
 	}
 }

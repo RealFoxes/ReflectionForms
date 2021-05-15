@@ -28,7 +28,8 @@ namespace TestReflectionForms.Entities
 		public DateTime SomeDate { get; set; }
 
 		public string SomeString { get; set; }
-
+		[ReflFormImage,ReflFormName("Ебать картинка нахуй")]
+		public byte[] SomeImage { get; set; }
 		public SomeEntity()
 		{
 

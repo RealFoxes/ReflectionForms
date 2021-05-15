@@ -110,9 +110,13 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202103251542592_v1.cs" />
-    <Compile Include="Migrations\202103251542592_v1.Designer.cs">
-      <DependentUpon>202103251542592_v1.cs</DependentUpon>
+    <Compile Include="Migrations\202105151940057_v1.cs" />
+    <Compile Include="Migrations\202105151940057_v1.designer.cs">
+      <DependentUpon>202105151940057_v1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105151941430_v2.cs" />
+    <Compile Include="Migrations\202105151941430_v2.designer.cs">
+      <DependentUpon>202105151941430_v2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDatabase.cs" />
@@ -121,8 +125,11 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103251542592_v1.resx">
-      <DependentUpon>202103251542592_v1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202105151940057_v1.resx">
+      <DependentUpon>202105151940057_v1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105151941430_v2.resx">
+      <DependentUpon>202105151941430_v2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

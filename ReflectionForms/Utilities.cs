@@ -1,6 +1,7 @@
 ﻿using ReflectionForms.Fields;
 using System;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 
@@ -87,6 +88,7 @@ namespace ReflectionForms
 			FieldsController.AddNewTypeField(typeof(Int32), typeof(IntField));
 			FieldsController.AddNewTypeField(typeof(Enum), typeof(EnumField));
 			FieldsController.AddNewTypeField(typeof(ReflFormRef), typeof(ReferenceField));
+			FieldsController.AddNewTypeField(typeof(Image), typeof(ImageField));
 		}
 	}
 }

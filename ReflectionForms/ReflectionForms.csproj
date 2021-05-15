@@ -140,6 +140,12 @@
       <DependentUpon>EnumField.cs</DependentUpon>
     </Compile>
     <Compile Include="Fields\IField.cs" />
+    <Compile Include="Fields\ImageField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Fields\ImageField.Designer.cs">
+      <DependentUpon>ImageField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Fields\ReferenceField.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -175,6 +181,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EntityForm.resx">
       <DependentUpon>EntityForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fields\ImageField.resx">
+      <DependentUpon>ImageField.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Fields\IntField.resx">
       <DependentUpon>IntField.cs</DependentUpon>

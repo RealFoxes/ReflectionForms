@@ -38,7 +38,7 @@ namespace ReflectionForms
 		}
 		public EntityForm<TEntity> GetForm<TEntity>(params Privileges[] privileges) where TEntity : class
 		{
-			return new EntityForm<TEntity>(this, privileges);
+			return new EntityForm<TEntity>(privileges);
 		}
 		public List<TEntity> GetAll<TEntity>() where TEntity : class
 		{

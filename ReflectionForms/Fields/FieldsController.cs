@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -13,7 +14,8 @@ namespace ReflectionForms.Fields
 		private static Dictionary<Type, Type> availableFields = new Dictionary<Type, Type>();
 		public static void AddNewTypeField(Type typeOfValueField, Type field)
 		{
-			//if(field.) Need to check interfaces
+			if (!typeof(IField).IsAssignableFrom(field))
+				throw new Exception($"The Field: {field.FullName} does not implemented the interface \"IField\"");
 			availableFields[typeOfValueField] = field;
 		}
 
@@ -28,11 +30,12 @@ namespace ReflectionForms.Fields
 
 					if (property.IsReference(out _)) type = typeof(ReflFormRef);
 					if (property.PropertyType.IsEnum) type = typeof(Enum);
+					if (property.CustomAttributes
+						.FirstOrDefault(att => att.AttributeType==typeof(ReflFormImage)) != null) type = typeof(Image);
 
 					availableFields.TryGetValue(type, out Type typeOfField);
 
-					if (!typeof(IField).IsAssignableFrom(typeOfField)) 
-						throw new Exception($"The Field: {typeOfField.FullName} does not implemented the interface \"IField\"");
+					
 					if (typeOfField == null) 
 						throw new NotImplementedException($"This type: {type} is not implemented");
 

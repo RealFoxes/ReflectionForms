@@ -18,6 +18,9 @@ namespace ReflectionForms
 	public class ReflFormNotVisible : ReflFormAtt
 	{
 	}
+	public class ReflFormImage : ReflFormAtt
+	{
+	}
 	public class ReflFormRef : ReflFormAtt
 	{
 		public string PropertyToShow { get; set; }
@@ -26,4 +29,5 @@ namespace ReflectionForms
 
 		}
 	}
+
 }
